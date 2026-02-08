@@ -62,7 +62,7 @@
                 <span class="text-2xl">📅</span>
             </div>
             <p class="text-3xl font-bold text-blue-600">
-                {% widthratio monthly_data|length|add:"0" 1 monthly_data|length %}
+                {{ avg_per_month }}
             </p>
             <p class="text-sm text-gray-500 mt-1">条/月</p>
         </div>

@@ -122,6 +122,9 @@ def news_stats_view(request):
     monthly_labels = [stat['month'].strftime('%Y-%m') for stat in monthly_stats]
     monthly_data = [stat['count'] for stat in monthly_stats]
     
+    # 计算月均播报数
+    avg_per_month = round(sum(monthly_data) / len(monthly_data), 1) if monthly_data else 0
+    
     # Top 10 播报员排行
     top_reporters = (
         NewsItem.objects
@@ -140,6 +143,7 @@ def news_stats_view(request):
         'total_count': total_count,
         'monthly_labels': monthly_labels,
         'monthly_data': monthly_data,
+        'avg_per_month': avg_per_month,
         'reporter_labels': reporter_labels,
         'reporter_data': reporter_data,
     }
