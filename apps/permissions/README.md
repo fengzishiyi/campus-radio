@@ -124,3 +124,91 @@ python manage.py test apps.permissions
 - 装饰器测试
 - 模板标签测试
 - 默认权限创建测试
+
+## 集成示例
+
+### 完整使用示例
+
+```python
+# views.py
+from django.shortcuts import render
+from apps.permissions.decorators import module_permission_required, admin_required
+
+# 需要特定模块权限的视图
+@module_permission_required('news')
+def create_news(request):
+    """创建新闻 - 需要 news 模块权限"""
+    return render(request, 'news/create.html')
+
+# 仅管理员可访问的视图
+@admin_required
+def manage_users(request):
+    """管理用户 - 仅管理员"""
+    return render(request, 'admin/users.html')
+```
+
+```django
+<!-- template.html -->
+{% load perm_tags %}
+
+<!-- 根据权限显示/隐藏功能 -->
+{% can_edit "news" request.user as can_edit_news %}
+{% if can_edit_news %}
+    <a href="{% url 'news:create' %}" class="btn btn-primary">
+        创建新闻
+    </a>
+{% endif %}
+
+<!-- 管理员专属功能 -->
+{% is_admin request.user as user_is_admin %}
+{% if user_is_admin %}
+    <div class="admin-panel">
+        <a href="{% url 'permissions:config' %}">权限配置</a>
+        <a href="/admin/">后台管理</a>
+    </div>
+{% endif %}
+```
+
+## 注意事项
+
+1. **装饰器顺序**: `@module_permission_required` 已经包含 `@login_required`，无需重复添加
+2. **权限检查**: 装饰器会自动检查用户是否已登录和是否有权限
+3. **错误消息**: 权限不足时会自动显示错误消息并重定向到首页
+4. **模板标签**: 返回布尔值，可用于条件判断
+
+## 故障排除
+
+### 问题：装饰器不起作用
+- 确认用户已登录且有 profile
+- 确认模块权限已在数据库中配置
+- 确认 `is_active=True`
+
+### 问题：模板标签返回 False
+- 检查用户的 role 是否在 allowed_roles 中
+- 确认模块名称拼写正确
+- 确认权限配置已保存
+
+## 维护
+
+### 添加新模块权限
+
+```python
+from apps.permissions.models import ModulePermission
+
+ModulePermission.objects.create(
+    module_name='new_module',
+    module_label='新模块',
+    allowed_roles=['admin'],
+    is_active=True
+)
+```
+
+### 更新权限
+
+访问 `/admin/permissions/config/` 在界面中更新，或使用代码：
+
+```python
+module = ModulePermission.objects.get(module_name='news')
+module.allowed_roles = ['admin', 'anchor', 'himalaya']
+module.save()
+```
