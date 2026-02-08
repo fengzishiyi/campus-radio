@@ -1,0 +1,7 @@
+Django>=5.0
+django-crispy-forms
+crispy-tailwind
+Pillow
+python-dotenv
+gunicorn
+whitenoise
