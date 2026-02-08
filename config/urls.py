@@ -27,6 +27,7 @@ urlpatterns = [
     path('news/', include('apps.news.urls')),
     path('broadcast/', include('apps.schedule.urls')),
     path('booking/', include('apps.booking.urls')),
+    path('himalaya/', include('apps.himalaya.urls')),
 ]
 
 if settings.DEBUG:

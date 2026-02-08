@@ -1,0 +1,74 @@
+{% extends 'base.html' %}
+
+{% block title %}文稿 - {{ track.title }} - 喜马拉雅{% endblock %}
+
+{% block content %}
+<div class="max-w-4xl mx-auto">
+    <!-- Back Button -->
+    <div class="mb-6">
+        <a href="{% url 'himalaya:album_detail' track.album.pk %}" class="text-blue-600 hover:text-blue-800 flex items-center">
+            ← 返回专辑详情
+        </a>
+    </div>
+
+    <!-- Track Info -->
+    <div class="bg-white rounded-lg shadow-md p-6 mb-6">
+        <div class="flex justify-between items-start">
+            <div class="flex-1">
+                <h1 class="text-2xl font-bold text-gray-900 mb-2">{{ track.title }}</h1>
+                <div class="text-sm text-gray-600 space-y-1">
+                    <p>专辑: <a href="{% url 'himalaya:album_detail' track.album.pk %}" class="text-blue-600 hover:text-blue-800">{{ track.album.title }}</a></p>
+                    <p>来源: {{ track.get_audio_source_display }}</p>
+                    <p>时长: {{ track.duration|default:"-" }}</p>
+                </div>
+            </div>
+            <div class="flex gap-2">
+                <a href="{% url 'himalaya:track_play' track.pk %}" target="_blank" class="bg-blue-600 hover:bg-blue-700 text-white px-4 py-2 rounded-md transition">
+                    ▶️ 播放音频
+                </a>
+                {% if user.is_authenticated %}
+                <a href="{% url 'himalaya:script_edit' track.pk %}" class="bg-gray-600 hover:bg-gray-700 text-white px-4 py-2 rounded-md transition">
+                    ✏️ 编辑文稿
+                </a>
+                {% endif %}
+            </div>
+        </div>
+    </div>
+
+    <!-- Script Content -->
+    <div class="bg-white rounded-lg shadow-md overflow-hidden">
+        <div class="px-6 py-4 bg-gray-50 border-b border-gray-200">
+            <h2 class="text-xl font-bold text-gray-900">文稿内容</h2>
+        </div>
+
+        {% if script %}
+        <div class="p-8">
+            <h3 class="text-2xl font-bold text-gray-900 mb-4">{{ script.title }}</h3>
+            
+            <div class="prose max-w-none">
+                <div class="whitespace-pre-line text-gray-700 leading-relaxed">{{ script.content }}</div>
+            </div>
+
+            <div class="mt-8 pt-6 border-t border-gray-200 text-sm text-gray-500">
+                <p>作者: {{ script.author.profile.real_name }}</p>
+                <p>创建时间: {{ script.created_at|date:"Y年m月d日 H:i" }}</p>
+                {% if script.updated_at != script.created_at %}
+                <p>最后更新: {{ script.updated_at|date:"Y年m月d日 H:i" }}</p>
+                {% endif %}
+            </div>
+        </div>
+        {% else %}
+        <div class="p-12 text-center">
+            <div class="text-6xl mb-4">📄</div>
+            <h3 class="text-xl font-semibold text-gray-700 mb-2">暂无文稿</h3>
+            <p class="text-gray-500 mb-6">该音频还没有添加文稿</p>
+            {% if user.is_authenticated %}
+            <a href="{% url 'himalaya:script_edit' track.pk %}" class="bg-blue-600 hover:bg-blue-700 text-white px-6 py-3 rounded-md inline-block transition">
+                添加文稿
+            </a>
+            {% endif %}
+        </div>
+        {% endif %}
+    </div>
+</div>
+{% endblock %}
