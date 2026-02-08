@@ -1,0 +1,78 @@
+{% extends 'base.html' %}
+
+{% block title %}删除新闻 - 校园广播站管理平台{% endblock %}
+
+{% block content %}
+<div class="max-w-2xl mx-auto">
+    <!-- Header -->
+    <div class="mb-6">
+        <a href="{% url 'news:detail' news_item.pk %}" class="text-blue-600 hover:text-blue-800 text-sm">
+            ← 返回详情
+        </a>
+    </div>
+
+    <!-- Confirmation Card -->
+    <div class="bg-white rounded-lg shadow-md p-8 border-l-4 border-red-500">
+        <div class="flex items-start mb-6">
+            <div class="flex-shrink-0">
+                <span class="text-5xl">⚠️</span>
+            </div>
+            <div class="ml-4">
+                <h1 class="text-2xl font-bold text-gray-900 mb-2">确认删除新闻</h1>
+                <p class="text-gray-600">此操作无法撤销，请仔细确认</p>
+            </div>
+        </div>
+
+        <!-- News Item Info -->
+        <div class="bg-gray-50 rounded-lg p-6 mb-6 border border-gray-200">
+            <h3 class="font-semibold text-gray-900 mb-3">即将删除的新闻：</h3>
+            <div class="space-y-2 text-sm">
+                <div class="flex">
+                    <span class="text-gray-600 w-24">播报日期：</span>
+                    <span class="text-gray-900 font-medium">{{ news_item.date }}</span>
+                </div>
+                <div class="flex">
+                    <span class="text-gray-600 w-24">新闻标题：</span>
+                    <span class="text-gray-900 font-medium">{{ news_item.title }}</span>
+                </div>
+                <div class="flex">
+                    <span class="text-gray-600 w-24">播报员：</span>
+                    <span class="text-gray-900">{{ news_item.reporter.profile.real_name|default:news_item.reporter.username }}</span>
+                </div>
+                <div class="flex">
+                    <span class="text-gray-600 w-24">创建时间：</span>
+                    <span class="text-gray-900">{{ news_item.created_at|date:"Y-m-d H:i" }}</span>
+                </div>
+            </div>
+        </div>
+
+        <!-- Warning -->
+        <div class="bg-red-50 border border-red-200 rounded-md p-4 mb-6">
+            <p class="text-sm text-red-800">
+                <strong>警告：</strong>删除后将无法恢复此新闻的所有信息，包括音频链接和文稿内容。
+            </p>
+        </div>
+
+        <!-- Action Buttons -->
+        <form method="post" class="flex items-center justify-between">
+            {% csrf_token %}
+            <a href="{% url 'news:detail' news_item.pk %}" 
+               class="text-gray-600 hover:text-gray-800">
+                取消，返回详情
+            </a>
+            <button type="submit" 
+                    class="bg-red-600 hover:bg-red-700 text-white px-8 py-2 rounded-lg transition font-medium">
+                🗑️ 确认删除
+            </button>
+        </form>
+    </div>
+
+    <!-- Safe Actions -->
+    <div class="mt-6 text-center">
+        <p class="text-sm text-gray-600">
+            如果只是想修改内容，请
+            <a href="{% url 'news:edit' news_item.pk %}" class="text-blue-600 hover:text-blue-800">编辑新闻</a>
+        </p>
+    </div>
+</div>
+{% endblock %}

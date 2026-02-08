@@ -24,6 +24,7 @@ urlpatterns = [
     path('accounts/', include('apps.accounts.urls')),
     path('admin/permissions/', include('apps.permissions.urls')),
     path('announcements/', include('apps.announcements.urls')),
+    path('news/', include('apps.news.urls')),
 ]
 
 if settings.DEBUG:
