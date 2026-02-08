@@ -1,0 +1,128 @@
+{% extends 'base.html' %}
+
+{% block title %}成员列表 - 校园广播站管理平台{% endblock %}
+
+{% block content %}
+<div class="max-w-7xl mx-auto">
+    <div class="bg-white rounded-lg shadow-lg p-8">
+        <h1 class="text-3xl font-bold mb-8 text-blue-600">成员列表</h1>
+        
+        <!-- 搜索和筛选 -->
+        <form method="get" class="mb-8">
+            <div class="grid grid-cols-1 md:grid-cols-4 gap-4">
+                <!-- 搜索框 -->
+                <div class="md:col-span-2">
+                    <input 
+                        type="text" 
+                        name="search" 
+                        value="{{ search_query }}" 
+                        placeholder="搜索姓名、学号或用户名..."
+                        class="w-full px-4 py-2 border border-gray-300 rounded-md focus:ring-2 focus:ring-blue-500 focus:border-transparent"
+                    >
+                </div>
+                
+                <!-- 部门筛选 -->
+                <div>
+                    <select 
+                        name="department" 
+                        class="w-full px-4 py-2 border border-gray-300 rounded-md focus:ring-2 focus:ring-blue-500 focus:border-transparent"
+                    >
+                        <option value="">全部部门</option>
+                        {% for value, label in department_choices %}
+                            <option value="{{ value }}" {% if department_filter == value %}selected{% endif %}>{{ label }}</option>
+                        {% endfor %}
+                    </select>
+                </div>
+                
+                <!-- 角色筛选 -->
+                <div>
+                    <select 
+                        name="role" 
+                        class="w-full px-4 py-2 border border-gray-300 rounded-md focus:ring-2 focus:ring-blue-500 focus:border-transparent"
+                    >
+                        <option value="">全部角色</option>
+                        {% for value, label in role_choices %}
+                            <option value="{{ value }}" {% if role_filter == value %}selected{% endif %}>{{ label }}</option>
+                        {% endfor %}
+                    </select>
+                </div>
+            </div>
+            
+            <div class="mt-4 flex gap-2">
+                <button 
+                    type="submit" 
+                    class="bg-blue-600 text-white py-2 px-6 rounded-md hover:bg-blue-700 transition font-medium"
+                >
+                    搜索
+                </button>
+                <a 
+                    href="{% url 'accounts:members' %}" 
+                    class="bg-gray-200 text-gray-700 py-2 px-6 rounded-md hover:bg-gray-300 transition font-medium"
+                >
+                    重置
+                </a>
+            </div>
+        </form>
+        
+        <!-- 成员数量 -->
+        <div class="mb-4">
+            <p class="text-gray-600">共找到 <span class="font-bold text-blue-600">{{ members.count }}</span> 位成员</p>
+        </div>
+        
+        <!-- 成员卡片网格 -->
+        <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+            {% for member in members %}
+                <div class="bg-gray-50 rounded-lg p-6 hover:shadow-md transition">
+                    <div class="flex items-start space-x-4">
+                        <!-- 头像 -->
+                        <div class="flex-shrink-0">
+                            {% if member.avatar %}
+                                <img src="{{ member.avatar.url }}" alt="{{ member.real_name }}" class="w-16 h-16 rounded-full object-cover">
+                            {% else %}
+                                <div class="w-16 h-16 rounded-full bg-blue-600 text-white flex items-center justify-center text-2xl font-bold">
+                                    {{ member.real_name|first }}
+                                </div>
+                            {% endif %}
+                        </div>
+                        
+                        <!-- 信息 -->
+                        <div class="flex-1 min-w-0">
+                            <h3 class="text-lg font-bold text-gray-900 truncate">{{ member.real_name }}</h3>
+                            <p class="text-sm text-gray-600">@{{ member.user.username }}</p>
+                            <div class="mt-2 space-y-1">
+                                <p class="text-xs text-gray-500">
+                                    <span class="inline-block bg-blue-100 text-blue-800 px-2 py-1 rounded">
+                                        {{ member.get_role_display }}
+                                    </span>
+                                </p>
+                                <p class="text-xs text-gray-500">
+                                    <span class="inline-block bg-green-100 text-green-800 px-2 py-1 rounded">
+                                        {{ member.get_department_display }}
+                                    </span>
+                                </p>
+                                <p class="text-xs text-gray-500">学号: {{ member.student_id }}</p>
+                                {% if member.phone %}
+                                    <p class="text-xs text-gray-500">📱 {{ member.phone }}</p>
+                                {% endif %}
+                                {% if member.wechat %}
+                                    <p class="text-xs text-gray-500">💬 {{ member.wechat }}</p>
+                                {% endif %}
+                            </div>
+                        </div>
+                    </div>
+                    
+                    {% if member.bio %}
+                        <div class="mt-4 pt-4 border-t border-gray-200">
+                            <p class="text-sm text-gray-600 line-clamp-2">{{ member.bio }}</p>
+                        </div>
+                    {% endif %}
+                </div>
+            {% empty %}
+                <div class="col-span-full text-center py-12">
+                    <p class="text-gray-500 text-lg">暂无成员</p>
+                </div>
+            {% endfor %}
+        </div>
+    </div>
+</div>
+{% endblock %}

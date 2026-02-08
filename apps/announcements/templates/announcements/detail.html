@@ -1,0 +1,102 @@
+{% extends "base.html" %}
+
+{% block title %}{{ announcement.title }} - 校园广播站管理平台{% endblock %}
+
+{% block content %}
+<div class="max-w-4xl mx-auto">
+    <div class="bg-white rounded-lg shadow-md p-8">
+        <!-- Header -->
+        <div class="border-b pb-4 mb-6">
+            <div class="flex items-center justify-between mb-4">
+                <div class="flex items-center gap-2">
+                    <!-- Type Badge -->
+                    {% if announcement.type == 'urgent' %}
+                        <span class="px-3 py-1 text-sm font-semibold bg-red-100 text-red-800 rounded">{{ announcement.get_type_display }}</span>
+                    {% elif announcement.type == 'activity' %}
+                        <span class="px-3 py-1 text-sm font-semibold bg-green-100 text-green-800 rounded">{{ announcement.get_type_display }}</span>
+                    {% elif announcement.type == 'schedule_change' %}
+                        <span class="px-3 py-1 text-sm font-semibold bg-yellow-100 text-yellow-800 rounded">{{ announcement.get_type_display }}</span>
+                    {% else %}
+                        <span class="px-3 py-1 text-sm font-semibold bg-blue-100 text-blue-800 rounded">{{ announcement.get_type_display }}</span>
+                    {% endif %}
+
+                    <!-- Pinned Badge -->
+                    {% if announcement.is_pinned %}
+                        <span class="px-3 py-1 text-sm font-semibold bg-red-100 text-red-800 rounded">📌 置顶</span>
+                    {% endif %}
+
+                    <!-- Department Badge -->
+                    <span class="px-3 py-1 text-sm font-semibold bg-gray-100 text-gray-800 rounded">
+                        {{ announcement.get_target_department_display }}
+                    </span>
+                </div>
+
+                <div class="flex gap-2">
+                    {% if perms.announcements or user.profile.is_admin %}
+                        <a href="{% url 'announcements:edit' announcement.pk %}" class="px-4 py-2 bg-yellow-500 text-white rounded-md hover:bg-yellow-600 transition">
+                            ✏️ 编辑
+                        </a>
+                        <a href="{% url 'announcements:delete' announcement.pk %}" class="px-4 py-2 bg-red-500 text-white rounded-md hover:bg-red-600 transition">
+                            🗑️ 删除
+                        </a>
+                    {% endif %}
+                </div>
+            </div>
+
+            <h1 class="text-3xl font-bold text-gray-800 mb-4">{{ announcement.title }}</h1>
+
+            <div class="flex items-center gap-6 text-sm text-gray-600">
+                <span class="flex items-center gap-1">
+                    👤 {{ announcement.publisher.get_full_name|default:announcement.publisher.username }}
+                </span>
+                <span class="flex items-center gap-1">
+                    📅 {{ announcement.publish_time|date:"Y年m月d日 H:i" }}
+                </span>
+                <span class="flex items-center gap-1">
+                    👁️ {{ read_count }} 人已读
+                </span>
+            </div>
+
+            {% if announcement.expire_time %}
+                <div class="mt-2 text-sm text-gray-600">
+                    ⏰ 过期时间：{{ announcement.expire_time|date:"Y年m月d日 H:i" }}
+                </div>
+            {% endif %}
+        </div>
+
+        <!-- Content -->
+        <div class="prose max-w-none mb-8">
+            <div class="text-gray-800 whitespace-pre-wrap leading-relaxed">{{ announcement.content }}</div>
+        </div>
+
+        <!-- Footer Actions -->
+        <div class="border-t pt-6 flex justify-between items-center">
+            <a href="{% url 'announcements:list' %}" class="px-6 py-2 bg-gray-500 text-white rounded-md hover:bg-gray-600 transition">
+                ← 返回列表
+            </a>
+            
+            {% if announcement.is_expired %}
+                <div class="px-4 py-2 bg-red-100 text-red-800 rounded-md">
+                    ⚠️ 此公告已过期
+                </div>
+            {% endif %}
+        </div>
+    </div>
+
+    <!-- Info Box -->
+    <div class="mt-6 bg-blue-50 border border-blue-200 rounded-lg p-4">
+        <h2 class="text-lg font-semibold text-blue-800 mb-2">📊 公告信息</h2>
+        <div class="text-blue-700 space-y-1">
+            <div>发布者：{{ announcement.publisher.get_full_name|default:announcement.publisher.username }}</div>
+            <div>发布时间：{{ announcement.publish_time|date:"Y年m月d日 H:i:s" }}</div>
+            <div>目标部门：{{ announcement.get_target_department_display }}</div>
+            <div>已读人数：{{ read_count }} 人</div>
+            {% if announcement.expire_time %}
+                <div>过期时间：{{ announcement.expire_time|date:"Y年m月d日 H:i:s" }}</div>
+            {% else %}
+                <div>过期时间：永不过期</div>
+            {% endif %}
+        </div>
+    </div>
+</div>
+{% endblock %}

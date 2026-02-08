@@ -1,0 +1,64 @@
+{% extends 'base.html' %}
+
+{% block title %}编辑 {{ group.name }} - 校园广播站管理平台{% endblock %}
+
+{% block content %}
+<div class="max-w-3xl mx-auto">
+    <div class="flex justify-between items-center mb-6">
+        <h1 class="text-3xl font-bold text-gray-800">编辑 {{ group.name }}</h1>
+        <a href="{% url 'schedule:groups_list' %}" class="bg-gray-600 hover:bg-gray-700 text-white px-4 py-2 rounded-md transition">
+            ← 返回
+        </a>
+    </div>
+    
+    <div class="bg-white rounded-lg shadow-md p-6">
+        <div class="mb-6 p-4 bg-blue-50 border border-blue-200 rounded-md">
+            <p class="text-blue-800">
+                <strong>{{ group.name }}</strong> - {{ group.get_weekday_display }}
+            </p>
+        </div>
+        
+        <form method="post" class="space-y-6">
+            {% csrf_token %}
+            
+            <!-- Leader -->
+            <div>
+                <label class="block text-sm font-medium text-gray-700 mb-2">
+                    组长
+                </label>
+                {{ form.leader }}
+                <p class="text-gray-500 text-sm mt-1">选择一位成员作为组长</p>
+            </div>
+            
+            <!-- Members -->
+            <div>
+                <label class="block text-sm font-medium text-gray-700 mb-2">
+                    组员
+                </label>
+                {{ form.members }}
+                <p class="text-gray-500 text-sm mt-1">按住 Ctrl (Windows) 或 Command (Mac) 可多选</p>
+            </div>
+            
+            <!-- Submit Button -->
+            <div class="flex gap-3">
+                <button type="submit" class="bg-blue-600 hover:bg-blue-700 text-white px-6 py-2 rounded-md transition">
+                    保存更改
+                </button>
+                <a href="{% url 'schedule:groups_list' %}" class="bg-gray-500 hover:bg-gray-600 text-white px-6 py-2 rounded-md transition inline-block">
+                    取消
+                </a>
+            </div>
+        </form>
+    </div>
+    
+    <!-- Tips -->
+    <div class="mt-6 p-4 bg-yellow-50 border border-yellow-200 rounded-md">
+        <h3 class="font-semibold text-yellow-800 mb-2">💡 提示</h3>
+        <ul class="text-yellow-700 text-sm space-y-1 list-disc list-inside">
+            <li>组长会在使用"从分组填充"时自动添加为播音员</li>
+            <li>所有组员也会在填充时被添加</li>
+            <li>建议每组至少设置2-3名成员</li>
+        </ul>
+    </div>
+</div>
+{% endblock %}

@@ -1,0 +1,187 @@
+{% extends 'base.html' %}
+
+{% block title %}新闻统计 - 校园广播站管理平台{% endblock %}
+
+{% block extra_head %}
+<script src="https://cdn.jsdelivr.net/npm/chart.js@4.4.0/dist/chart.umd.min.js"></script>
+{% endblock %}
+
+{% block content %}
+<div class="max-w-7xl mx-auto">
+    <!-- Header -->
+    <div class="mb-8 flex justify-between items-center">
+        <div>
+            <h1 class="text-3xl font-bold text-gray-900">📊 新闻统计分析</h1>
+            <p class="text-gray-600 mt-2">查看新闻数据统计和趋势分析</p>
+        </div>
+        <a href="{% url 'news:list' %}" class="bg-blue-600 hover:bg-blue-700 text-white px-4 py-2 rounded-lg transition">
+            ← 返回列表
+        </a>
+    </div>
+
+    <!-- Total Count Card -->
+    <div class="bg-gradient-to-r from-blue-600 to-blue-700 text-white rounded-lg shadow-lg p-8 mb-8">
+        <div class="flex items-center justify-between">
+            <div>
+                <p class="text-blue-100 text-lg mb-2">新闻总数</p>
+                <p class="text-5xl font-bold">{{ total_count }}</p>
+                <p class="text-blue-100 mt-2">条新闻播报</p>
+            </div>
+            <div class="text-8xl opacity-20">
+                📰
+            </div>
+        </div>
+    </div>
+
+    <!-- Charts Grid -->
+    <div class="grid grid-cols-1 lg:grid-cols-2 gap-8 mb-8">
+        <!-- Monthly Stats Chart -->
+        <div class="bg-white rounded-lg shadow-md p-6">
+            <h2 class="text-xl font-bold text-gray-900 mb-4">📈 月度新闻统计（最近6个月）</h2>
+            <div class="relative" style="height: 300px;">
+                <canvas id="monthlyChart"></canvas>
+            </div>
+        </div>
+
+        <!-- Top Reporters Chart -->
+        <div class="bg-white rounded-lg shadow-md p-6">
+            <h2 class="text-xl font-bold text-gray-900 mb-4">🏆 播报员排行榜（Top 10）</h2>
+            <div class="relative" style="height: 300px;">
+                <canvas id="reportersChart"></canvas>
+            </div>
+        </div>
+    </div>
+
+    <!-- Additional Info -->
+    <div class="grid grid-cols-1 md:grid-cols-3 gap-6">
+        <!-- Average per Month -->
+        {% if monthly_data %}
+        <div class="bg-white rounded-lg shadow-md p-6">
+            <div class="flex items-center justify-between mb-2">
+                <span class="text-gray-600">月均播报</span>
+                <span class="text-2xl">📅</span>
+            </div>
+            <p class="text-3xl font-bold text-blue-600">
+                {{ avg_per_month }}
+            </p>
+            <p class="text-sm text-gray-500 mt-1">条/月</p>
+        </div>
+        {% endif %}
+
+        <!-- Total Reporters -->
+        {% if reporter_labels %}
+        <div class="bg-white rounded-lg shadow-md p-6">
+            <div class="flex items-center justify-between mb-2">
+                <span class="text-gray-600">活跃播报员</span>
+                <span class="text-2xl">👥</span>
+            </div>
+            <p class="text-3xl font-bold text-green-600">{{ reporter_labels|length }}</p>
+            <p class="text-sm text-gray-500 mt-1">位播报员</p>
+        </div>
+        {% endif %}
+
+        <!-- Most Active Reporter -->
+        {% if reporter_labels and reporter_data %}
+        <div class="bg-white rounded-lg shadow-md p-6">
+            <div class="flex items-center justify-between mb-2">
+                <span class="text-gray-600">最活跃播报员</span>
+                <span class="text-2xl">⭐</span>
+            </div>
+            <p class="text-lg font-bold text-purple-600">{{ reporter_labels.0 }}</p>
+            <p class="text-sm text-gray-500 mt-1">{{ reporter_data.0 }} 条新闻</p>
+        </div>
+        {% endif %}
+    </div>
+</div>
+
+<script>
+// Monthly Chart
+const monthlyCtx = document.getElementById('monthlyChart').getContext('2d');
+new Chart(monthlyCtx, {
+    type: 'bar',
+    data: {
+        labels: {{ monthly_labels|safe }},
+        datasets: [{
+            label: '新闻数量',
+            data: {{ monthly_data|safe }},
+            backgroundColor: 'rgba(59, 130, 246, 0.5)',
+            borderColor: 'rgb(59, 130, 246)',
+            borderWidth: 2
+        }]
+    },
+    options: {
+        responsive: true,
+        maintainAspectRatio: false,
+        plugins: {
+            legend: {
+                display: false
+            }
+        },
+        scales: {
+            y: {
+                beginAtZero: true,
+                ticks: {
+                    stepSize: 1
+                }
+            }
+        }
+    }
+});
+
+// Reporters Chart
+const reportersCtx = document.getElementById('reportersChart').getContext('2d');
+new Chart(reportersCtx, {
+    type: 'bar',
+    data: {
+        labels: {{ reporter_labels|safe }},
+        datasets: [{
+            label: '播报数量',
+            data: {{ reporter_data|safe }},
+            backgroundColor: [
+                'rgba(255, 99, 132, 0.5)',
+                'rgba(54, 162, 235, 0.5)',
+                'rgba(255, 206, 86, 0.5)',
+                'rgba(75, 192, 192, 0.5)',
+                'rgba(153, 102, 255, 0.5)',
+                'rgba(255, 159, 64, 0.5)',
+                'rgba(199, 199, 199, 0.5)',
+                'rgba(83, 102, 255, 0.5)',
+                'rgba(255, 99, 255, 0.5)',
+                'rgba(99, 255, 132, 0.5)'
+            ],
+            borderColor: [
+                'rgb(255, 99, 132)',
+                'rgb(54, 162, 235)',
+                'rgb(255, 206, 86)',
+                'rgb(75, 192, 192)',
+                'rgb(153, 102, 255)',
+                'rgb(255, 159, 64)',
+                'rgb(199, 199, 199)',
+                'rgb(83, 102, 255)',
+                'rgb(255, 99, 255)',
+                'rgb(99, 255, 132)'
+            ],
+            borderWidth: 2
+        }]
+    },
+    options: {
+        indexAxis: 'y',
+        responsive: true,
+        maintainAspectRatio: false,
+        plugins: {
+            legend: {
+                display: false
+            }
+        },
+        scales: {
+            x: {
+                beginAtZero: true,
+                ticks: {
+                    stepSize: 1
+                }
+            }
+        }
+    }
+});
+</script>
+{% endblock %}

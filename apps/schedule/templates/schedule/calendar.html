@@ -1,0 +1,121 @@
+{% extends 'base.html' %}
+
+{% block title %}广播站排班日历 - 校园广播站管理平台{% endblock %}
+
+{% block content %}
+<div class="max-w-7xl mx-auto">
+    <div class="flex justify-between items-center mb-6">
+        <h1 class="text-3xl font-bold text-gray-800">📅 广播站排班日历</h1>
+        <a href="{% url 'schedule:groups_list' %}" class="bg-blue-600 hover:bg-blue-700 text-white px-4 py-2 rounded-md transition">
+            👥 分组管理
+        </a>
+    </div>
+    
+    <!-- Calendar Container -->
+    <div class="bg-white rounded-lg shadow-md p-6">
+        <div id="calendar"></div>
+    </div>
+</div>
+
+<!-- Modal for Day Detail -->
+<div id="dayModal" class="hidden fixed inset-0 bg-black bg-opacity-50 z-50 flex items-center justify-center p-4">
+    <div class="bg-white rounded-lg shadow-xl max-w-4xl w-full max-h-[90vh] overflow-y-auto">
+        <div class="sticky top-0 bg-white border-b px-6 py-4 flex justify-between items-center">
+            <h2 id="modalTitle" class="text-2xl font-bold text-gray-800"></h2>
+            <button onclick="closeModal()" class="text-gray-500 hover:text-gray-700 text-2xl">
+                ✕
+            </button>
+        </div>
+        <div id="modalContent" class="p-6">
+            <!-- Content will be loaded here -->
+        </div>
+    </div>
+</div>
+
+{% endblock %}
+
+{% block extra_js %}
+<script>
+document.addEventListener('DOMContentLoaded', function() {
+    var calendarEl = document.getElementById('calendar');
+    
+    var calendar = new FullCalendar.Calendar(calendarEl, {
+        locale: 'zh-cn',
+        initialView: 'dayGridMonth',
+        headerToolbar: {
+            left: 'prev,next today',
+            center: 'title',
+            right: 'dayGridMonth,timeGridWeek,listWeek'
+        },
+        buttonText: {
+            today: '今天',
+            month: '月',
+            week: '周',
+            list: '列表'
+        },
+        height: 'auto',
+        events: '/broadcast/calendar/api/events/',
+        eventClick: function(info) {
+            info.jsEvent.preventDefault();
+            openDayDetail(info.event.start);
+        },
+        dateClick: function(info) {
+            openDayDetail(new Date(info.dateStr));
+        },
+        eventColor: '#3b82f6',
+    });
+    
+    calendar.render();
+});
+
+function openDayDetail(date) {
+    const dateStr = date.toISOString().split('T')[0];
+    const modal = document.getElementById('dayModal');
+    const modalTitle = document.getElementById('modalTitle');
+    const modalContent = document.getElementById('modalContent');
+    
+    // Format date for display
+    const options = { year: 'numeric', month: 'long', day: 'numeric', weekday: 'long' };
+    modalTitle.textContent = date.toLocaleDateString('zh-CN', options);
+    
+    // Show modal
+    modal.classList.remove('hidden');
+    
+    // Load content
+    modalContent.innerHTML = '<div class="text-center py-8"><div class="animate-spin rounded-full h-12 w-12 border-b-2 border-blue-600 mx-auto"></div></div>';
+    
+    fetch(`/broadcast/calendar/${dateStr}/`)
+        .then(response => response.text())
+        .then(html => {
+            modalContent.innerHTML = html;
+        })
+        .catch(error => {
+            modalContent.innerHTML = '<div class="text-red-600 text-center">加载失败，请重试</div>';
+        });
+}
+
+function closeModal() {
+    const modal = document.getElementById('dayModal');
+    modal.classList.add('hidden');
+}
+
+// Close modal when clicking outside
+document.getElementById('dayModal')?.addEventListener('click', function(e) {
+    if (e.target === this) {
+        closeModal();
+    }
+});
+
+// Close modal on Escape key
+document.addEventListener('keydown', function(e) {
+    if (e.key === 'Escape') {
+        closeModal();
+    }
+});
+
+// Reload calendar after modal operations
+function reloadCalendar() {
+    location.reload();
+}
+</script>
+{% endblock %}
