@@ -16,93 +16,64 @@
     <script src='https://cdn.jsdelivr.net/npm/fullcalendar@6.1.10/index.global.min.js'></script>
     <script src='https://cdn.jsdelivr.net/npm/fullcalendar@6.1.10/locales/zh-cn.global.min.js'></script>
     
-    <!-- Newspaper Style CSS -->
+    <!-- GitHub Style CSS -->
     {% load static %}
-    <link rel="stylesheet" href="{% static 'css/newspaper.css' %}">
+    <link rel="stylesheet" href="{% static 'css/style.css' %}">
     
     {% block extra_head %}{% endblock %}
 </head>
-<body class="bg-gray-50 min-h-screen">
-    <!-- Newspaper Masthead -->
-    <header class="newspaper-masthead">
-        <div class="masthead-decoration-top"></div>
-        <div class="masthead-title">
-            <div class="masthead-logo">🎙️</div>
-            <h1 class="masthead-main-title">校园广播站报</h1>
-            <p class="masthead-subtitle">CAMPUS RADIO STATION DAILY</p>
-        </div>
-        <div class="masthead-meta">
-            <span class="masthead-date" id="current-date"></span>
-            <span class="masthead-issue">第001期</span>
-        </div>
-        <div class="masthead-decoration-bottom"></div>
-    </header>
-    
-    <!-- User Info Bar -->
-    {% if user.is_authenticated %}
-    <div class="newspaper-user-bar">
-        <div class="container">
-            欢迎, <strong>{{ user.profile.real_name }}</strong>
-            {% if unread_announcements_count > 0 %}
-                <a href="/announcements/" class="notification-count">({{ unread_announcements_count }}) 条新通知</a>
-            {% endif %}
-            <span class="user-dropdown">
-                {% if user.profile.avatar %}
-                    <img src="{{ user.profile.avatar.url }}" alt="{{ user.profile.real_name }}" class="user-avatar">
-                {% else %}
-                    <span class="user-avatar-placeholder">{{ user.profile.real_name|first }}</span>
+<<body>
+    <!-- GitHub Style Header -->
+    <header class="gh-header">
+        <div class="gh-header-container">
+            <div class="gh-header-logo">🎙️</div>
+            <a href="/" class="gh-header-title">校园广播站管理平台</a>
+            
+            <nav class="gh-nav">
+                <a href="/" class="gh-nav-link">头版</a>
+                <a href="/studio/" class="gh-nav-link">录音室</a>
+                <a href="/himalaya/" class="gh-nav-link">喜马拉雅</a>
+                {% if not user.is_authenticated %}
+                <a href="/accounts/login/" class="gh-nav-link">登录</a>
+                <a href="/accounts/register/" class="gh-nav-link">注册</a>
                 {% endif %}
-                <span style="cursor: pointer;">▼</span>
-                <div class="user-dropdown-content">
-                    <a href="/accounts/profile/">个人信息</a>
-                    <a href="/accounts/members/">成员列表</a>
-                    {% if user.profile.is_admin %}
-                        <a href="/accounts/invite-codes/">邀请码管理</a>
-                        <a href="/admin/permissions/">权限配置</a>
-                    {% endif %}
-                    <a href="/accounts/logout/" class="logout">登出</a>
+            </nav>
+            
+            {% if user.is_authenticated %}
+            <div class="gh-user-menu">
+                <span>{{ user.profile.real_name }}</span>
+                {% if unread_announcements_count > 0 %}
+                    <span class="gh-notification-badge">{{ unread_announcements_count }}</span>
+                {% endif %}
+                <div class="gh-user-dropdown">
+                    <div class="gh-user-dropdown-toggle">
+                        {% if user.profile.avatar %}
+                            <img src="{{ user.profile.avatar.url }}" alt="{{ user.profile.real_name }}" class="gh-user-avatar">
+                        {% else %}
+                            <span class="gh-user-avatar-placeholder">{{ user.profile.real_name|first }}</span>
+                        {% endif %}
+                        <span>▼</span>
+                    </div>
+                    <div class="gh-user-dropdown-menu">
+                        <a href="/accounts/profile/">个人信息</a>
+                        <a href="/accounts/members/">成员列表</a>
+                        {% if user.profile.is_admin %}
+                            <a href="/accounts/invite-codes/">邀请码管理</a>
+                            <a href="/admin/permissions/">权限配置</a>
+                        {% endif %}
+                        <a href="/accounts/logout/" class="logout">登出</a>
+                    </div>
                 </div>
-            </span>
+            </div>
+            {% endif %}
         </div>
-    </div>
-    {% endif %}
-    
-    <!-- Newspaper Navigation -->
-    <nav class="newspaper-nav">
-        <a href="/">头版</a>
-        <span class="nav-separator">|</span>
-        <a href="/announcements/">公告</a>
-        <span class="nav-separator">|</span>
-        <a href="/broadcast/calendar/">排班</a>
-        <span class="nav-separator">|</span>
-        <a href="/booking/">录音室</a>
-        <span class="nav-separator">|</span>
-        <a href="/himalaya/">喜马拉雅</a>
-        {% if not user.is_authenticated %}
-        <span class="nav-separator">|</span>
-        <a href="/accounts/login/">登录</a>
-        <span class="nav-separator">|</span>
-        <a href="/accounts/register/">注册</a>
-        {% endif %}
-    </nav>
-    
-    <!-- Urgent Announcements Banner -->
-    {% if urgent_announcements %}
-        <div class="newspaper-urgent-banner">
-            <span class="urgent-label">⚠️ 号外</span>
-            {% for announcement in urgent_announcements %}
-                <a href="/announcements/{{ announcement.id }}/">
-                    {{ announcement.title }}
-                </a>
-            {% endfor %}
-        </div>
-    {% endif %}
+    </header>
     
     <!-- Messages -->
     {% if messages %}
-        <div class="newspaper-container">
+        <div class="gh-container">
             {% for message in messages %}
-                <div class="newspaper-message {% if message.tags == 'error' %}error{% elif message.tags == 'success' %}success{% elif message.tags == 'warning' %}warning{% endif %}" role="alert">
+                <div class="gh-alert {% if message.tags == 'error' %}gh-alert-error{% elif message.tags == 'success' %}gh-alert-success{% elif message.tags == 'warning' %}gh-alert-warning{% else %}gh-alert-info{% endif %}" role="alert">
                     <span>{{ message }}</span>
                 </div>
             {% endfor %}
@@ -110,30 +81,192 @@
     {% endif %}
     
     <!-- Main Content -->
-    <main class="newspaper-container">
+    <main class="gh-container">
         {% block content %}{% endblock %}
     </main>
     
     <!-- Footer -->
-    <footer class="newspaper-footer">
-        <div class="footer-divider"></div>
-        <p><strong>校园广播站报</strong> | Campus Radio Station Daily</p>
-        <p>&copy; 2026 校园广播站管理平台 | 编辑部出品</p>
-        <p style="font-size: 0.75rem; margin-top: 1rem;">本报由校园广播站编辑部制作发行</p>
+    <footer class="gh-footer">
+        <p><strong>校园广播站管理平台</strong> | Campus Radio Management System</p>
+        <p>&copy; 2026 校园广播站 | Powered by Django</p>
     </footer>
     
-    <!-- JavaScript for dynamic date -->
+    <!-- Mini Audio Player -->
+    <div class="gh-mini-player" id="miniPlayer" style="display: none;">
+        <div class="gh-mini-player-container">
+            <div class="gh-player-controls">
+                <button class="gh-player-btn" id="prevBtn" title="上一曲">
+                    <span>⏮</span>
+                </button>
+                <button class="gh-player-btn gh-player-btn-primary" id="playPauseBtn" title="播放/暂停">
+                    <span id="playIcon">▶</span>
+                </button>
+                <button class="gh-player-btn" id="nextBtn" title="下一曲">
+                    <span>⏭</span>
+                </button>
+            </div>
+            
+            <div class="gh-player-info">
+                <div class="gh-player-song-title" id="songTitle">暂无歌曲</div>
+                <div class="gh-player-song-artist" id="songArtist"></div>
+            </div>
+            
+            <div class="gh-player-progress">
+                <span class="gh-player-time" id="currentTime">0:00</span>
+                <div class="gh-player-progress-bar" id="progressBar">
+                    <div class="gh-player-progress-fill" id="progressFill" style="width: 0%"></div>
+                </div>
+                <span class="gh-player-time" id="totalTime">0:00</span>
+            </div>
+            
+            <div class="gh-player-volume">
+                <button class="gh-player-btn" id="volumeBtn" title="音量">
+                    <span id="volumeIcon">🔊</span>
+                </button>
+                <div class="gh-player-volume-bar" id="volumeBar">
+                    <div class="gh-player-volume-fill" id="volumeFill" style="width: 70%"></div>
+                </div>
+            </div>
+        </div>
+        <audio id="audioPlayer" style="display: none;"></audio>
+    </div>
+    
+    <!-- Mini Player JavaScript -->
     <script>
-        // Set current date in masthead
-        const dateElement = document.getElementById('current-date');
-        if (dateElement) {
-            const now = new Date();
-            const year = now.getFullYear();
-            const month = now.getMonth() + 1;
-            const day = now.getDate();
-            const days = ['日', '一', '二', '三', '四', '五', '六'];
-            const dayOfWeek = days[now.getDay()];
-            dateElement.textContent = `${year}年${month}月${day}日 星期${dayOfWeek}`;
+        // Mini Player Functionality
+        const audioPlayer = document.getElementById('audioPlayer');
+        const miniPlayer = document.getElementById('miniPlayer');
+        const playPauseBtn = document.getElementById('playPauseBtn');
+        const playIcon = document.getElementById('playIcon');
+        const prevBtn = document.getElementById('prevBtn');
+        const nextBtn = document.getElementById('nextBtn');
+        const progressBar = document.getElementById('progressBar');
+        const progressFill = document.getElementById('progressFill');
+        const currentTimeEl = document.getElementById('currentTime');
+        const totalTimeEl = document.getElementById('totalTime');
+        const volumeBtn = document.getElementById('volumeBtn');
+        const volumeBar = document.getElementById('volumeBar');
+        const volumeFill = document.getElementById('volumeFill');
+        const volumeIcon = document.getElementById('volumeIcon');
+        const songTitle = document.getElementById('songTitle');
+        const songArtist = document.getElementById('songArtist');
+        
+        let playlist = [];
+        let currentTrack = 0;
+        
+        // Load playlist on page load
+        function loadPlaylist() {
+            fetch('/studio/api/today-playlist/')
+                .then(response => response.json())
+                .then(data => {
+                    if (data.songs && data.songs.length > 0) {
+                        playlist = data.songs;
+                        loadTrack(0);
+                        miniPlayer.style.display = 'block';
+                        document.body.classList.add('has-player');
+                    }
+                })
+                .catch(error => console.error('Error loading playlist:', error));
+        }
+        
+        function loadTrack(index) {
+            if (playlist.length === 0) return;
+            
+            currentTrack = index;
+            const track = playlist[currentTrack];
+            
+            songTitle.textContent = track.title;
+            songArtist.textContent = track.artist || '';
+            
+            if (track.audio_url) {
+                audioPlayer.src = track.audio_url;
+            }
+        }
+        
+        function togglePlayPause() {
+            if (audioPlayer.paused) {
+                audioPlayer.play();
+                playIcon.textContent = '⏸';
+            } else {
+                audioPlayer.pause();
+                playIcon.textContent = '▶';
+            }
+        }
+        
+        function playNext() {
+            currentTrack = (currentTrack + 1) % playlist.length;
+            loadTrack(currentTrack);
+            audioPlayer.play();
+        }
+        
+        function playPrev() {
+            currentTrack = (currentTrack - 1 + playlist.length) % playlist.length;
+            loadTrack(currentTrack);
+            audioPlayer.play();
+        }
+        
+        function formatTime(seconds) {
+            const mins = Math.floor(seconds / 60);
+            const secs = Math.floor(seconds % 60);
+            return `${mins}:${secs.toString().padStart(2, '0')}`;
+        }
+        
+        // Event listeners
+        playPauseBtn.addEventListener('click', togglePlayPause);
+        nextBtn.addEventListener('click', playNext);
+        prevBtn.addEventListener('click', playPrev);
+        
+        audioPlayer.addEventListener('timeupdate', () => {
+            if (audioPlayer.duration) {
+                const percent = (audioPlayer.currentTime / audioPlayer.duration) * 100;
+                progressFill.style.width = percent + '%';
+                currentTimeEl.textContent = formatTime(audioPlayer.currentTime);
+                totalTimeEl.textContent = formatTime(audioPlayer.duration);
+            }
+        });
+        
+        audioPlayer.addEventListener('ended', playNext);
+        
+        progressBar.addEventListener('click', (e) => {
+            const rect = progressBar.getBoundingClientRect();
+            const percent = (e.clientX - rect.left) / rect.width;
+            audioPlayer.currentTime = percent * audioPlayer.duration;
+        });
+        
+        volumeBar.addEventListener('click', (e) => {
+            const rect = volumeBar.getBoundingClientRect();
+            const percent = (e.clientX - rect.left) / rect.width;
+            audioPlayer.volume = percent;
+            volumeFill.style.width = (percent * 100) + '%';
+            
+            if (percent === 0) {
+                volumeIcon.textContent = '🔇';
+            } else if (percent < 0.5) {
+                volumeIcon.textContent = '🔉';
+            } else {
+                volumeIcon.textContent = '🔊';
+            }
+        });
+        
+        volumeBtn.addEventListener('click', () => {
+            if (audioPlayer.volume > 0) {
+                audioPlayer.dataset.previousVolume = audioPlayer.volume;
+                audioPlayer.volume = 0;
+                volumeFill.style.width = '0%';
+                volumeIcon.textContent = '🔇';
+            } else {
+                const prevVolume = parseFloat(audioPlayer.dataset.previousVolume) || 0.7;
+                audioPlayer.volume = prevVolume;
+                volumeFill.style.width = (prevVolume * 100) + '%';
+                volumeIcon.textContent = '🔊';
+            }
+        });
+        
+        // Initialize player on page load
+        if (document.readyState === 'loading') {
+            document.addEventListener('DOMContentLoaded', loadPlaylist);
+        } else {
+            loadPlaylist();
         }
     </script>
     

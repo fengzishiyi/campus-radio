@@ -1,71 +1,20 @@
 {% extends 'base.html' %}
 
-{% block title %}广播站排班日历 - 校园广播站管理平台{% endblock %}
+{% block title %}录音室日历 - 校园广播站管理平台{% endblock %}
 
 {% block content %}
-<div class="max-w-7xl mx-auto">
-    <div class="flex justify-between items-center mb-6">
-        <h1 class="text-3xl font-bold text-gray-800">📅 广播站排班日历</h1>
-        <div class="flex gap-2">
-            <button onclick="showCreateWeekModal()" class="bg-green-600 hover:bg-green-700 text-white px-4 py-2 rounded-md transition">
-                📅 创建一周排班
-            </button>
-            <a href="{% url 'schedule:groups_list' %}" class="bg-blue-600 hover:bg-blue-700 text-white px-4 py-2 rounded-md transition">
-                👥 分组管理
-            </a>
-        </div>
-    </div>
-    
-    <!-- Calendar Container -->
-    <div class="bg-white rounded-lg shadow-md p-6">
-        <div id="calendar"></div>
-    </div>
-</div>
-
-<!-- Modal for Day Detail -->
-<div id="dayModal" class="hidden fixed inset-0 bg-black bg-opacity-50 z-50 flex items-center justify-center p-4">
-    <div class="bg-white rounded-lg shadow-xl max-w-4xl w-full max-h-[90vh] overflow-y-auto">
-        <div class="sticky top-0 bg-white border-b px-6 py-4 flex justify-between items-center">
-            <h2 id="modalTitle" class="text-2xl font-bold text-gray-800"></h2>
-            <button onclick="closeModal()" class="text-gray-500 hover:text-gray-700 text-2xl">
-                ✕
-            </button>
-        </div>
-        <div id="modalContent" class="p-6">
-            <!-- Content will be loaded here -->
+<div class="gh-card" style="margin-bottom: 24px;">
+    <div style="display: flex; justify-content: space-between; align-items: center;">
+        <h1 style="font-size: 24px; font-weight: 600; margin: 0;">📅 录音室日历</h1>
+        <div style="display: flex; gap: 8px;">
+            <a href="{% url 'studio:groups_list' %}" class="gh-btn">👥 分组管理</a>
         </div>
     </div>
 </div>
 
-<!-- Modal for Create Week Schedule -->
-<div id="createWeekModal" class="hidden fixed inset-0 bg-black bg-opacity-50 z-50 flex items-center justify-center p-4">
-    <div class="bg-white rounded-lg shadow-xl max-w-md w-full">
-        <div class="px-6 py-4 border-b">
-            <h2 class="text-xl font-bold text-gray-800">创建一周排班</h2>
-        </div>
-        <form method="POST" action="{% url 'schedule:create_week' %}" class="p-6">
-            {% csrf_token %}
-            <div class="mb-4">
-                <label for="start_date" class="block text-sm font-medium text-gray-700 mb-2">
-                    选择开始日期
-                </label>
-                <input type="date" 
-                       id="start_date" 
-                       name="start_date" 
-                       required
-                       class="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-blue-500 focus:ring-blue-500">
-                <p class="mt-2 text-sm text-gray-500">将自动创建从该日期开始的7天排班，并根据分组配置填充播音员</p>
-            </div>
-            <div class="flex justify-end gap-2">
-                <button type="button" onclick="closeCreateWeekModal()" class="px-4 py-2 border border-gray-300 rounded-md text-gray-700 hover:bg-gray-50 transition">
-                    取消
-                </button>
-                <button type="submit" class="px-4 py-2 bg-green-600 text-white rounded-md hover:bg-green-700 transition">
-                    创建
-                </button>
-            </div>
-        </form>
-    </div>
+<!-- Calendar Container -->
+<div class="gh-card">
+    <div id="calendar"></div>
 </div>
 
 {% endblock %}
@@ -90,88 +39,19 @@ document.addEventListener('DOMContentLoaded', function() {
             list: '列表'
         },
         height: 'auto',
-        events: '/broadcast/calendar/api/events/',
+        events: '/studio/api/events/',
         eventClick: function(info) {
             info.jsEvent.preventDefault();
-            openDayDetail(info.event.start);
+            const dateStr = info.event.start.toISOString().split('T')[0];
+            window.location.href = `/studio/${dateStr}/`;
         },
         dateClick: function(info) {
-            openDayDetail(new Date(info.dateStr));
+            window.location.href = `/studio/${info.dateStr}/`;
         },
-        eventColor: '#3b82f6',
+        eventColor: '#0969da',
     });
     
     calendar.render();
 });
-
-function openDayDetail(date) {
-    const dateStr = date.toISOString().split('T')[0];
-    const modal = document.getElementById('dayModal');
-    const modalTitle = document.getElementById('modalTitle');
-    const modalContent = document.getElementById('modalContent');
-    
-    // Format date for display
-    const options = { year: 'numeric', month: 'long', day: 'numeric', weekday: 'long' };
-    modalTitle.textContent = date.toLocaleDateString('zh-CN', options);
-    
-    // Show modal
-    modal.classList.remove('hidden');
-    
-    // Load content
-    modalContent.innerHTML = '<div class="text-center py-8"><div class="animate-spin rounded-full h-12 w-12 border-b-2 border-blue-600 mx-auto"></div></div>';
-    
-    fetch(`/broadcast/calendar/${dateStr}/`)
-        .then(response => response.text())
-        .then(html => {
-            modalContent.innerHTML = html;
-        })
-        .catch(error => {
-            modalContent.innerHTML = '<div class="text-red-600 text-center">加载失败，请重试</div>';
-        });
-}
-
-function closeModal() {
-    const modal = document.getElementById('dayModal');
-    modal.classList.add('hidden');
-}
-
-function showCreateWeekModal() {
-    const modal = document.getElementById('createWeekModal');
-    modal.classList.remove('hidden');
-    // Set default date to today
-    const today = new Date().toISOString().split('T')[0];
-    document.getElementById('start_date').value = today;
-}
-
-function closeCreateWeekModal() {
-    const modal = document.getElementById('createWeekModal');
-    modal.classList.add('hidden');
-}
-
-// Close modal when clicking outside
-document.getElementById('dayModal')?.addEventListener('click', function(e) {
-    if (e.target === this) {
-        closeModal();
-    }
-});
-
-document.getElementById('createWeekModal')?.addEventListener('click', function(e) {
-    if (e.target === this) {
-        closeCreateWeekModal();
-    }
-});
-
-// Close modal on Escape key
-document.addEventListener('keydown', function(e) {
-    if (e.key === 'Escape') {
-        closeModal();
-        closeCreateWeekModal();
-    }
-});
-
-// Reload calendar after modal operations
-function reloadCalendar() {
-    location.reload();
-}
 </script>
 {% endblock %}

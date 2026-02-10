@@ -94,10 +94,12 @@ urlpatterns = [
     path('accounts/', include('apps.accounts.urls')),
     path('admin/permissions/', include('apps.permissions.urls')),
     path('announcements/', include('apps.announcements.urls')),
-    path('broadcast/news/', include('apps.news.urls')),
+    path('studio/', include('apps.studio_urls')),  # Merged schedule + booking
+    path('himalaya/', include('apps.himalaya.urls')),
+    # Legacy URLs for backward compatibility (redirect to studio)
     path('broadcast/', include('apps.schedule.urls')),
     path('booking/', include('apps.booking.urls')),
-    path('himalaya/', include('apps.himalaya.urls')),
+    path('broadcast/news/', include('apps.news.urls')),
 ]
 
 if settings.DEBUG:

@@ -1,43 +1,43 @@
 {% extends 'base.html' %}
 
-{% block title %}首页 - 校园广播站管理平台{% endblock %}
+{% block title %}头版 - 校园广播站管理平台{% endblock %}
 
 {% block content %}
-<!-- 信息栏 - Info Bar -->
-<div class="info-bar">
-    <div class="info-bar-item">
-        <span class="info-bar-icon">📅</span>
+<!-- Info Bar with Date and Weather -->
+<div class="gh-info-bar">
+    <div class="gh-info-item">
+        <span class="gh-info-icon">📅</span>
         <div>
-            <div class="info-bar-label">今日日期</div>
-            <div class="info-bar-value">{% now "Y年m月d日 l" %}</div>
+            <div class="gh-info-label">今日日期</div>
+            <div class="gh-info-value">{% now "Y年m月d日 l" %}</div>
         </div>
     </div>
-    <div class="info-bar-item">
-        <span class="info-bar-icon">☀️</span>
+    <div class="gh-info-item">
+        <span class="gh-info-icon">☀️</span>
         <div>
-            <div class="info-bar-label">天气</div>
-            <div class="info-bar-value">晴天 / 22°C</div>
+            <div class="gh-info-label">天气</div>
+            <div class="gh-info-value">晴天 / 22°C</div>
         </div>
     </div>
-    <div class="info-bar-item">
-        <span class="info-bar-icon">🎙️</span>
+    <div class="gh-info-item">
+        <span class="gh-info-icon">🎙️</span>
         <div>
-            <div class="info-bar-label">今日录音室预约</div>
-            <div class="info-bar-value">{{ today_bookings_count|default:0 }} 个时段</div>
+            <div class="gh-info-label">今日录音室预约</div>
+            <div class="gh-info-value">{{ today_bookings_count|default:0 }} 个时段</div>
         </div>
     </div>
 </div>
 
-<!-- 最新公告 - Announcements Grid -->
-<div class="front-page-announcements">
-    <h2 class="front-page-title">━━ 📋 最新公告 ━━</h2>
+<!-- Announcements Section - Main Content Area -->
+<div class="gh-announcements-section">
+    <h2 class="gh-section-title">📋 最新公告</h2>
     
     {% if recent_announcements %}
-        <div class="announcements-grid">
+        <div class="gh-announcements-grid">
             {% for announcement in recent_announcements %}
-                <div class="announcement-card {% if announcement.type == 'urgent' %}urgent{% endif %}">
-                    <div class="announcement-card-header">
-                        <span class="announcement-card-type">
+                <div class="gh-announcement-card {% if announcement.type == 'urgent' %}urgent{% endif %}">
+                    <div class="gh-announcement-header">
+                        <span class="gh-label {% if announcement.type == 'urgent' %}gh-label-urgent{% elif announcement.type == 'activity' %}gh-label-activity{% elif announcement.type == 'schedule_change' %}gh-label-schedule{% else %}gh-label-normal{% endif %}">
                             {% if announcement.type == 'urgent' %}
                                 🚨 紧急
                             {% elif announcement.type == 'activity' %}
@@ -48,44 +48,44 @@
                                 📢 通知
                             {% endif %}
                         </span>
-                        <span class="announcement-card-date">{{ announcement.publish_time|date:"m-d H:i" }}</span>
+                        <span class="gh-announcement-date">{{ announcement.publish_time|date:"m-d H:i" }}</span>
                     </div>
-                    <h3 class="announcement-card-title">
+                    <h3 class="gh-announcement-title">
                         <a href="/announcements/{{ announcement.id }}/">{{ announcement.title }}</a>
                     </h3>
-                    <p class="announcement-card-preview">{{ announcement.content|truncatewords:20 }}</p>
+                    <p class="gh-announcement-preview">{{ announcement.content|truncatewords:20 }}</p>
                 </div>
             {% endfor %}
         </div>
-        <div class="section-footer">
+        <div class="gh-card-footer">
             <a href="/announcements/">查看全部公告 →</a>
         </div>
     {% else %}
-        <div class="empty-message">
-            <div class="empty-icon">📭</div>
-            <p>暂无公告</p>
+        <div class="gh-empty">
+            <div class="gh-empty-icon">📭</div>
+            <p class="gh-empty-text">暂无公告</p>
         </div>
     {% endif %}
 </div>
 
-<!-- 两栏布局 - Today's Studio & Playlist -->
-<div class="newspaper-columns-2">
-    <!-- 左栏：今日录音室安排 -->
-    <div class="timeline-container">
-        <h3 class="timeline-header">🎙️ 今日录音室安排</h3>
+<!-- Two Column Layout - Today's Studio & Playlist -->
+<div class="gh-two-columns">
+    <!-- Left Column: Today's Studio Timeline -->
+    <div class="gh-timeline-container">
+        <h3 class="gh-timeline-header">🎙️ 今日录音室安排</h3>
         
         {% if today_bookings %}
-            <!-- 时间轴刻度 -->
-            <div class="timeline-scale">
+            <!-- Timeline Scale -->
+            <div class="gh-timeline-scale">
                 {% for hour in timeline_hours %}
-                    <span class="timeline-hour">{{ hour }}:00</span>
+                    <span class="gh-timeline-hour">{{ hour }}:00</span>
                 {% endfor %}
             </div>
             
-            <!-- 时间块可视化 -->
-            <div class="timeline-bookings">
+            <!-- Timeline Visualization -->
+            <div class="gh-timeline-bookings">
                 {% for booking in today_bookings %}
-                    <div class="booking-block {{ booking.status }}" 
+                    <div class="gh-booking-block {{ booking.status }}" 
                          style="left: {{ booking.start_offset }}%; width: {{ booking.width }}%;"
                          title="{{ booking.user.profile.real_name }} - {{ booking.purpose }}">
                         {% if booking.width > 15 %}
@@ -95,16 +95,16 @@
                 {% endfor %}
             </div>
             
-            <!-- 预约列表详情 -->
-            <div class="booking-list">
+            <!-- Booking List Details -->
+            <div class="gh-booking-list">
                 {% for booking in today_bookings %}
-                    <div class="booking-item">
-                        <span class="booking-time">{{ booking.start_time|time:"H:i" }}-{{ booking.end_time|time:"H:i" }}</span>
-                        <div class="booking-info">
-                            <div class="booking-user">{{ booking.user.profile.real_name }}</div>
-                            <div class="booking-purpose">{{ booking.purpose }}</div>
+                    <div class="gh-booking-item">
+                        <span class="gh-booking-time">{{ booking.start_time|time:"H:i" }}-{{ booking.end_time|time:"H:i" }}</span>
+                        <div class="gh-booking-info">
+                            <div class="gh-booking-user">{{ booking.user.profile.real_name }}</div>
+                            <div class="gh-booking-purpose">{{ booking.purpose }}</div>
                         </div>
-                        <span class="booking-status {{ booking.status }}">
+                        <span class="gh-booking-status {{ booking.status }}">
                             {% if booking.status == 'pending' %}待确认
                             {% elif booking.status == 'confirmed' %}已确认
                             {% elif booking.status == 'completed' %}已完成
@@ -114,95 +114,59 @@
                 {% endfor %}
             </div>
             
-            <div class="section-footer">
-                <a href="/booking/">完整预约页面 →</a>
+            <div class="gh-card-footer">
+                <a href="/studio/">完整录音室页面 →</a>
             </div>
         {% else %}
-            <div class="empty-message">
-                <div class="empty-icon">🎙️</div>
-                <p>今日暂无录音室预约</p>
+            <div class="gh-empty">
+                <div class="gh-empty-icon">🎙️</div>
+                <p class="gh-empty-text">今日暂无录音室预约</p>
             </div>
-            <div class="section-footer">
-                <a href="/booking/create/">立即预约 →</a>
+            <div class="gh-card-footer">
+                <a href="/studio/">前往录音室 →</a>
             </div>
         {% endif %}
     </div>
     
-    <!-- 右栏：今日广播歌单 -->
-    <div class="playlist-container">
-        <h3 class="playlist-header">🎵 今日广播歌单</h3>
+    <!-- Right Column: Today's Playlist -->
+    <div class="gh-playlist-container">
+        <h3 class="gh-timeline-header">🎵 今日广播歌单</h3>
         
         {% if today_songs %}
-            <ol class="song-list">
+            <ol class="gh-song-list">
                 {% for song in today_songs %}
-                    <li class="song-item">
-                        <span class="song-number">{{ forloop.counter }}.</span>
-                        <span class="song-title">{{ song.title }}</span>
+                    <li class="gh-song-item">
+                        <span class="gh-song-number">{{ forloop.counter }}.</span>
+                        <span class="gh-song-title">{{ song.title }}</span>
                         {% if song.artist %}
-                            <span class="song-artist">- {{ song.artist }}</span>
+                            <span class="gh-song-artist">- {{ song.artist }}</span>
                         {% endif %}
                     </li>
                 {% endfor %}
             </ol>
         {% else %}
-            <div class="empty-message">
-                <div class="empty-icon">🎵</div>
-                <p>今日暂无歌单安排</p>
+            <div class="gh-empty">
+                <div class="gh-empty-icon">🎵</div>
+                <p class="gh-empty-text">今日暂无歌单安排</p>
             </div>
         {% endif %}
         
-        <!-- 节目安排 -->
+        <!-- Today's Programs -->
         {% if today_programs %}
-            <div class="programs-section">
-                <h4 class="programs-title">📻 今日节目安排</h4>
+            <div class="gh-programs-section">
+                <h4 class="gh-programs-title">📻 今日节目安排</h4>
                 {% for program in today_programs %}
-                    <div class="program-item">
-                        <div class="program-name">{{ program.name }}</div>
-                        <div class="program-time">{{ program.time_slot }}</div>
+                    <div class="gh-program-item">
+                        <div class="gh-program-name">{{ program.name }}</div>
+                        <div class="gh-program-time">{{ program.time_slot }}</div>
                     </div>
                 {% endfor %}
             </div>
         {% endif %}
         
-        <div class="section-footer">
-            <a href="/broadcast/calendar/">排班日历 →</a>
+        <div class="gh-card-footer">
+            <a href="/studio/">录音室日历 →</a>
         </div>
-    </div>
-</div>
-
-<!-- 快速导航 - Quick Navigation Sections -->
-<h2 class="section-header">━━ 各版块导航 ━━</h2>
-<div class="newspaper-columns-4">
-    <div class="section-card">
-        <a href="/announcements/">
-            <div class="section-card-icon">📢</div>
-            <h3 class="section-card-title">公告专栏</h3>
-            <p class="section-card-desc">查看最新公告和通知</p>
-        </a>
-    </div>
-
-    <div class="section-card">
-        <a href="/broadcast/calendar/">
-            <div class="section-card-icon">📅</div>
-            <h3 class="section-card-title">排班信息</h3>
-            <p class="section-card-desc">管理广播站日程</p>
-        </a>
-    </div>
-
-    <div class="section-card">
-        <a href="/booking/">
-            <div class="section-card-icon">🎙️</div>
-            <h3 class="section-card-title">录音室</h3>
-            <p class="section-card-desc">预约使用录音室</p>
-        </a>
-    </div>
-
-    <div class="section-card">
-        <a href="/himalaya/">
-            <div class="section-card-icon">🎧</div>
-            <h3 class="section-card-title">喜马拉雅</h3>
-            <p class="section-card-desc">音频专辑管理</p>
-        </a>
     </div>
 </div>
 {% endblock %}

@@ -1,0 +1,231 @@
+{% extends 'base.html' %}
+
+{% block title %}{{ date|date:"Y年m月d日" }} - 录音室 - 校园广播站管理平台{% endblock %}
+
+{% block content %}
+<div class="gh-card" style="margin-bottom: 24px;">
+    <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 16px;">
+        <h1 style="font-size: 24px; font-weight: 600; margin: 0;">
+            📅 {{ date|date:"Y年m月d日 l" }}
+        </h1>
+        <div style="display: flex; gap: 8px;">
+            <a href="/studio/" class="gh-btn">← 返回日历</a>
+            <form method="post" action="{% url 'studio:toggle_live' date|date:'Y-m-d' %}" style="display: inline;">
+                {% csrf_token %}
+                <button type="submit" class="gh-btn {% if schedule.is_live %}gh-btn-danger{% else %}gh-btn-primary{% endif %}">
+                    {% if schedule.is_live %}
+                        📡 关闭直播
+                    {% else %}
+                        📡 开启直播
+                    {% endif %}
+                </button>
+            </form>
+        </div>
+    </div>
+    
+    {% if schedule.is_live %}
+    <div class="gh-alert gh-alert-warning">
+        <strong>📡 直播中</strong> 本日 16:00-18:00 进行直播
+    </div>
+    {% endif %}
+</div>
+
+<!-- Timeline Visualization -->
+<div class="gh-card" style="margin-bottom: 24px;">
+    <h3 class="gh-card-header">🎙️ 今日时间轴 (8:00-22:00)</h3>
+    
+    <div class="gh-timeline-scale">
+        {% for hour in timeline_hours %}
+            <span class="gh-timeline-hour">{{ hour }}:00</span>
+        {% endfor %}
+    </div>
+    
+    <div class="gh-timeline-bookings">
+        {% for booking in bookings %}
+            <div class="gh-booking-block {{ booking.status }}" 
+                 style="left: {{ booking.start_offset }}%; width: {{ booking.width }}%;"
+                 title="{% if booking.is_live %}📡 直播中{% else %}{{ booking.user.profile.real_name }} - {{ booking.purpose }}{% endif %}">
+                {% if booking.width > 15 %}
+                    {% if booking.is_live %}📡{% else %}{{ booking.user.profile.real_name|truncatewords:1 }}{% endif %}
+                {% endif %}
+            </div>
+        {% endfor %}
+    </div>
+</div>
+
+<!-- Three Sections in responsive grid -->
+<div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(300px, 1fr)); gap: 24px; margin-bottom: 24px;">
+    
+    <!-- Programs Section -->
+    <div class="gh-card">
+        <h3 class="gh-card-header">�� 节目安排</h3>
+        
+        <form method="post" action="{% url 'studio:add_program' date|date:'Y-m-d' %}" style="margin-bottom: 16px;">
+            {% csrf_token %}
+            <div style="margin-bottom: 8px;">
+                <input type="text" name="name" placeholder="节目名称" required 
+                       style="width: 100%; padding: 8px; border: 1px solid var(--gh-border-default); border-radius: 6px;">
+            </div>
+            <div style="margin-bottom: 8px;">
+                <input type="text" name="time_slot" placeholder="时间段 (例: 16:00-18:00)" required 
+                       style="width: 100%; padding: 8px; border: 1px solid var(--gh-border-default); border-radius: 6px;">
+            </div>
+            <button type="submit" class="gh-btn gh-btn-primary" style="width: 100%;">添加节目</button>
+        </form>
+        
+        <div style="border-top: 1px solid var(--gh-border-muted); padding-top: 12px;">
+            {% if programs %}
+                {% for program in programs %}
+                <div style="display: flex; justify-content: space-between; align-items: center; padding: 8px 0; border-bottom: 1px solid var(--gh-border-muted);">
+                    <div>
+                        <div style="font-weight: 500;">{{ program.name }}</div>
+                        <div style="font-size: 12px; color: var(--gh-fg-muted);">{{ program.time_slot }}</div>
+                    </div>
+                    <form method="post" action="{% url 'studio:delete_program' program.id %}" style="display: inline;">
+                        {% csrf_token %}
+                        <button type="submit" class="gh-btn" onclick="return confirm('确定删除该节目吗？')">🗑️</button>
+                    </form>
+                </div>
+                {% endfor %}
+            {% else %}
+                <div class="gh-empty">
+                    <p class="gh-empty-text">暂无节目</p>
+                </div>
+            {% endif %}
+        </div>
+    </div>
+    
+    <!-- Songs Section -->
+    <div class="gh-card">
+        <h3 class="gh-card-header">🎵 歌曲列表</h3>
+        
+        <form method="post" action="{% url 'studio:add_song' date|date:'Y-m-d' %}" style="margin-bottom: 16px;">
+            {% csrf_token %}
+            <div style="margin-bottom: 8px;">
+                <input type="text" name="title" placeholder="歌曲名" required 
+                       style="width: 100%; padding: 8px; border: 1px solid var(--gh-border-default); border-radius: 6px;">
+            </div>
+            <div style="margin-bottom: 8px;">
+                <input type="text" name="artist" placeholder="歌手 (可选)" 
+                       style="width: 100%; padding: 8px; border: 1px solid var(--gh-border-default); border-radius: 6px;">
+            </div>
+            <button type="submit" class="gh-btn gh-btn-primary" style="width: 100%;">添加歌曲</button>
+        </form>
+        
+        <!-- Upload Song with Audio -->
+        <div style="padding: 12px; background: var(--gh-canvas-subtle); border-radius: 6px; margin-bottom: 16px;">
+            <h4 style="font-size: 14px; font-weight: 600; margin: 0 0 8px 0;">上传音频文件</h4>
+            <form id="uploadSongForm" enctype="multipart/form-data">
+                {% csrf_token %}
+                <div style="margin-bottom: 8px;">
+                    <input type="text" id="uploadTitle" placeholder="歌曲名" required 
+                           style="width: 100%; padding: 6px; border: 1px solid var(--gh-border-default); border-radius: 6px; font-size: 13px;">
+                </div>
+                <div style="margin-bottom: 8px;">
+                    <input type="text" id="uploadArtist" placeholder="歌手 (可选)" 
+                           style="width: 100%; padding: 6px; border: 1px solid var(--gh-border-default); border-radius: 6px; font-size: 13px;">
+                </div>
+                <div style="margin-bottom: 8px;">
+                    <input type="file" id="uploadAudioFile" accept="audio/*" required 
+                           style="width: 100%; padding: 6px; border: 1px solid var(--gh-border-default); border-radius: 6px; font-size: 13px;">
+                </div>
+                <button type="submit" class="gh-btn gh-btn-primary" style="width: 100%; font-size: 13px;">上传歌曲</button>
+            </form>
+        </div>
+        
+        <div style="border-top: 1px solid var(--gh-border-muted); padding-top: 12px; max-height: 300px; overflow-y: auto;">
+            {% if songs %}
+                {% for song in songs %}
+                <div style="display: flex; justify-content: space-between; align-items: center; padding: 8px 0; border-bottom: 1px solid var(--gh-border-muted);">
+                    <div style="flex: 1; min-width: 0;">
+                        <div style="font-weight: 500;">{{ song.title }}</div>
+                        {% if song.artist %}
+                        <div style="font-size: 12px; color: var(--gh-fg-muted);">{{ song.artist }}</div>
+                        {% endif %}
+                        {% if song.audio_file %}
+                        <div style="font-size: 11px; color: var(--gh-accent-fg);">🎵 已上传音频</div>
+                        {% endif %}
+                    </div>
+                    <form method="post" action="{% url 'studio:delete_song' song.id %}" style="display: inline;">
+                        {% csrf_token %}
+                        <button type="submit" class="gh-btn" onclick="return confirm('确定删除该歌曲吗？')">🗑️</button>
+                    </form>
+                </div>
+                {% endfor %}
+            {% else %}
+                <div class="gh-empty">
+                    <p class="gh-empty-text">暂无歌曲</p>
+                </div>
+            {% endif %}
+        </div>
+    </div>
+    
+    <!-- Bookings Section -->
+    <div class="gh-card">
+        <h3 class="gh-card-header">🎙️ 录音室预约</h3>
+        
+        <div style="margin-bottom: 16px;">
+            <a href="{% url 'booking:create' %}?date={{ date|date:'Y-m-d' }}" class="gh-btn gh-btn-primary" style="width: 100%; text-align: center; display: inline-block;">创建预约</a>
+        </div>
+        
+        <div style="border-top: 1px solid var(--gh-border-muted); padding-top: 12px;">
+            {% if bookings %}
+                {% for booking in bookings %}
+                    {% if not booking.is_live %}
+                    <div style="padding: 8px 0; border-bottom: 1px solid var(--gh-border-muted);">
+                        <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 4px;">
+                            <span style="font-family: ui-monospace; font-size: 13px; font-weight: 600;">
+                                {{ booking.start_time|time:"H:i" }}-{{ booking.end_time|time:"H:i" }}
+                            </span>
+                            <span class="gh-booking-status {{ booking.status }}">
+                                {% if booking.status == 'pending' %}待确认
+                                {% elif booking.status == 'confirmed' %}已确认
+                                {% elif booking.status == 'completed' %}已完成
+                                {% endif %}
+                            </span>
+                        </div>
+                        <div style="font-weight: 500; font-size: 14px;">{{ booking.user.profile.real_name }}</div>
+                        <div style="font-size: 12px; color: var(--gh-fg-muted);">{{ booking.purpose }}</div>
+                    </div>
+                    {% endif %}
+                {% endfor %}
+            {% else %}
+                <div class="gh-empty">
+                    <p class="gh-empty-text">暂无预约</p>
+                </div>
+            {% endif %}
+        </div>
+    </div>
+</div>
+
+<script>
+// Handle song upload with AJAX
+document.getElementById('uploadSongForm').addEventListener('submit', function(e) {
+    e.preventDefault();
+    
+    const formData = new FormData();
+    formData.append('title', document.getElementById('uploadTitle').value);
+    formData.append('artist', document.getElementById('uploadArtist').value);
+    formData.append('audio_file', document.getElementById('uploadAudioFile').files[0]);
+    formData.append('csrfmiddlewaretoken', document.querySelector('[name=csrfmiddlewaretoken]').value);
+    
+    fetch('{% url "studio:upload_song" date|date:"Y-m-d" %}', {
+        method: 'POST',
+        body: formData
+    })
+    .then(response => response.json())
+    .then(data => {
+        if (data.success) {
+            alert('歌曲上传成功！');
+            location.reload();
+        } else {
+            alert('上传失败: ' + (data.error || '未知错误'));
+        }
+    })
+    .catch(error => {
+        alert('上传失败: ' + error);
+    });
+});
+</script>
+
+{% endblock %}
