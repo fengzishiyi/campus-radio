@@ -17,8 +17,10 @@ urlpatterns = [
     path('calendar/<str:date_str>/add-song/', views.add_song_view, name='add_song'),
     path('songs/<int:pk>/delete/', views.delete_song_view, name='delete_song'),
     
-    # Auto-fill from group
+    # Batch operations
     path('calendar/<str:date_str>/fill-from-group/', views.fill_from_group_view, name='fill_from_group'),
+    path('calendar/<str:date_str>/copy-previous/', views.copy_previous_day_view, name='copy_previous_day'),
+    path('calendar/create-week/', views.create_week_schedule_view, name='create_week'),
     
     # Groups management
     path('groups/', views.groups_list_view, name='groups_list'),
