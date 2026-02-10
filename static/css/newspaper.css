@@ -1,0 +1,602 @@
+/* ===================================
+   校园广播站报 - 复古报纸风格样式表
+   Vintage Newspaper Style CSS
+   =================================== */
+
+/* CSS Custom Properties - Root Variables */
+:root {
+    --newspaper-bg: #FAF7F0;
+    --newspaper-text: #1a1a1a;
+    --newspaper-border: #ccc;
+    --newspaper-border-dark: #333;
+    --newspaper-border-black: #000;
+    --newspaper-red: #c00;
+    --newspaper-green: #070;
+    --newspaper-orange: #c60;
+    --newspaper-blue: #006;
+    --newspaper-gray: #666;
+    --newspaper-light-gray: #999;
+    --newspaper-divider: #ddd;
+}
+
+/* 全局样式 - Global Styles */
+body {
+    background-color: var(--newspaper-bg);
+    color: var(--newspaper-text);
+    font-family: 'Noto Serif SC', 'SimSun', 'Times New Roman', serif;
+    line-height: 1.8;
+}
+
+/* 移除所有现代化效果 - Remove Modern Effects */
+*,
+*::before,
+*::after {
+    box-shadow: none;
+    border-radius: 0;
+}
+
+/* 报头样式 - Newspaper Masthead */
+.newspaper-masthead {
+    background: linear-gradient(to bottom, #f5f1e8, #ffffff);
+    border-bottom: 4px double var(--newspaper-border-black);
+    padding: 2rem 0 1rem;
+    text-align: center;
+    margin-bottom: 0;
+}
+
+.masthead-decoration-top {
+    height: 2px;
+    background: var(--newspaper-border-black);
+    margin: 0 auto 1rem;
+    width: 90%;
+}
+
+.masthead-title {
+    margin: 1rem 0;
+}
+
+.masthead-logo {
+    font-size: 2.5rem;
+    margin-bottom: 0.5rem;
+}
+
+.masthead-main-title {
+    font-size: 3.5rem;
+    font-weight: 900;
+    letter-spacing: 0.3em;
+    font-family: 'Noto Sans SC', 'Microsoft YaHei', 'Arial Black', sans-serif;
+    color: var(--newspaper-border-black);
+    margin: 0.5rem 0;
+    text-shadow: 2px 2px 0px rgba(0,0,0,0.1);
+}
+
+.masthead-subtitle {
+    font-size: 0.9rem;
+    letter-spacing: 0.15em;
+    color: var(--newspaper-gray);
+    font-family: 'Times New Roman', serif;
+    font-style: italic;
+    margin-top: 0.5rem;
+}
+
+.masthead-meta {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    gap: 2rem;
+    margin: 1rem 0;
+    font-size: 0.9rem;
+    color: var(--newspaper-border-dark);
+}
+
+.masthead-date {
+    font-weight: bold;
+}
+
+.masthead-issue {
+    border-left: 1px solid var(--newspaper-light-gray);
+    padding-left: 2rem;
+}
+
+.masthead-decoration-bottom {
+    height: 3px;
+    background: var(--newspaper-border-black);
+    margin: 1rem auto 0;
+    width: 90%;
+}
+
+/* 导航栏 - Navigation */
+.newspaper-nav {
+    background: #f5f1e8;
+    border-bottom: 2px solid var(--newspaper-border-black);
+    padding: 0.75rem 0;
+    text-align: center;
+    font-size: 1.1rem;
+    font-family: 'Noto Sans SC', 'Microsoft YaHei', sans-serif;
+}
+
+.newspaper-nav a {
+    color: var(--newspaper-border-black);
+    text-decoration: none;
+    font-weight: 600;
+    padding: 0.5rem 1.5rem;
+    transition: background-color 0.2s;
+}
+
+.newspaper-nav a:hover {
+    background-color: #e8e4dc;
+    text-decoration: underline;
+}
+
+.nav-separator {
+    color: var(--newspaper-light-gray);
+    margin: 0 0.5rem;
+}
+
+/* 用户信息栏 - User Info */
+.newspaper-user-bar {
+    background: #fff;
+    border-bottom: 1px solid var(--newspaper-border);
+    padding: 0.5rem 0;
+    font-size: 0.85rem;
+    text-align: right;
+}
+
+.newspaper-user-bar .container {
+    max-width: 1200px;
+    margin: 0 auto;
+    padding: 0 1rem;
+}
+
+.newspaper-user-bar a {
+    color: var(--newspaper-border-dark);
+    margin-left: 1rem;
+    text-decoration: none;
+}
+
+.newspaper-user-bar a:hover {
+    text-decoration: underline;
+}
+
+/* 紧急公告横幅 - Urgent Banner */
+.newspaper-urgent-banner {
+    background: #1a1a1a;
+    color: #fff;
+    border-top: 3px solid var(--newspaper-red);
+    border-bottom: 3px solid var(--newspaper-red);
+    padding: 1rem;
+    text-align: center;
+    font-weight: bold;
+}
+
+.urgent-label {
+    background: var(--newspaper-red);
+    color: #fff;
+    padding: 0.25rem 0.75rem;
+    margin-right: 1rem;
+    font-size: 1.1rem;
+    letter-spacing: 0.2em;
+}
+
+.newspaper-urgent-banner a {
+    color: #fff;
+    margin: 0 1rem;
+    text-decoration: underline;
+}
+
+/* 主容器 - Main Container */
+.newspaper-container {
+    max-width: 1200px;
+    margin: 0 auto;
+    padding: 2rem 1rem;
+    background: var(--newspaper-bg);
+}
+
+/* 版块标题 - Section Header */
+.section-header {
+    border-top: 3px double var(--newspaper-border-black);
+    border-bottom: 3px double var(--newspaper-border-black);
+    padding: 0.75rem 0;
+    margin: 2rem 0 1.5rem;
+    text-align: center;
+    font-size: 1.8rem;
+    font-weight: 900;
+    letter-spacing: 0.2em;
+    font-family: 'Noto Sans SC', 'Microsoft YaHei', sans-serif;
+}
+
+/* 头版要闻 - Front Page */
+.front-page-section {
+    background: #fff;
+    border: 3px solid var(--newspaper-border-black);
+    padding: 2rem;
+    margin-bottom: 2rem;
+}
+
+.front-page-title {
+    font-size: 2.5rem;
+    font-weight: 900;
+    text-align: center;
+    margin-bottom: 1.5rem;
+    font-family: 'Noto Sans SC', 'Microsoft YaHei', sans-serif;
+    letter-spacing: 0.1em;
+    border-bottom: 2px solid var(--newspaper-border-black);
+    padding-bottom: 1rem;
+}
+
+.front-page-content {
+    font-size: 1.1rem;
+    line-height: 2;
+}
+
+/* 分栏布局 - Column Layout */
+.newspaper-columns-2 {
+    column-count: 2;
+    column-gap: 2rem;
+    column-rule: 1px solid var(--newspaper-light-gray);
+}
+
+.newspaper-columns-3 {
+    column-count: 3;
+    column-gap: 1.5rem;
+    column-rule: 1px solid var(--newspaper-light-gray);
+}
+
+.newspaper-columns-4 {
+    column-count: 4;
+    column-gap: 1.25rem;
+    column-rule: 1px solid var(--newspaper-light-gray);
+}
+
+/* 防止分栏内元素断裂 */
+.newspaper-columns-2 > *,
+.newspaper-columns-3 > *,
+.newspaper-columns-4 > * {
+    break-inside: avoid;
+    page-break-inside: avoid;
+}
+
+/* 栏目卡片 - Section Card */
+.section-card {
+    background: #fff;
+    border: 2px solid var(--newspaper-border-dark);
+    padding: 1.5rem;
+    margin-bottom: 1.5rem;
+    break-inside: avoid;
+}
+
+.section-card-icon {
+    font-size: 2.5rem;
+    text-align: center;
+    margin-bottom: 1rem;
+}
+
+.section-card-title {
+    font-size: 1.5rem;
+    font-weight: 900;
+    text-align: center;
+    margin-bottom: 0.75rem;
+    font-family: 'Noto Sans SC', 'Microsoft YaHei', sans-serif;
+    border-bottom: 2px solid var(--newspaper-border-black);
+    padding-bottom: 0.5rem;
+}
+
+.section-card-desc {
+    font-size: 0.9rem;
+    text-align: center;
+    color: var(--newspaper-gray);
+}
+
+.section-card a {
+    color: var(--newspaper-border-black);
+    text-decoration: none;
+    display: block;
+}
+
+.section-card:hover {
+    background: #f9f9f9;
+    border-color: var(--newspaper-border-black);
+}
+
+/* 文章列表 - Article List */
+.article-list {
+    background: #fff;
+    border: 2px solid var(--newspaper-border-dark);
+    padding: 1.5rem;
+}
+
+.article-item {
+    border-bottom: 1px solid var(--newspaper-divider);
+    padding: 1.25rem 0;
+}
+
+.article-item:last-child {
+    border-bottom: none;
+}
+
+.article-header {
+    display: flex;
+    align-items: flex-start;
+    justify-content: space-between;
+    margin-bottom: 0.75rem;
+}
+
+.article-tags {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 0.5rem;
+    margin-bottom: 0.5rem;
+}
+
+/* 文章标题 - Article Headline */
+.article-headline {
+    font-size: 1.3rem;
+    font-weight: 900;
+    line-height: 1.4;
+    margin: 0.5rem 0;
+    font-family: 'Noto Sans SC', 'Microsoft YaHei', sans-serif;
+    color: var(--newspaper-border-black);
+}
+
+.article-headline a {
+    color: var(--newspaper-border-black);
+    text-decoration: none;
+}
+
+.article-headline a:hover {
+    text-decoration: underline;
+}
+
+/* 标签样式 - Tag Styles */
+.tag {
+    font-weight: bold;
+    font-size: 0.85rem;
+    padding: 0.15rem 0.4rem;
+    font-family: 'Noto Sans SC', 'Microsoft YaHei', sans-serif;
+}
+
+.tag::before { content: "["; }
+.tag::after { content: "]"; }
+
+.tag-urgent {
+    color: var(--newspaper-red);
+    border: 1px solid var(--newspaper-red);
+    background: #fff;
+}
+
+.tag-activity {
+    color: var(--newspaper-green);
+    border: 1px solid var(--newspaper-green);
+    background: #fff;
+}
+
+.tag-schedule {
+    color: var(--newspaper-orange);
+    border: 1px solid var(--newspaper-orange);
+    background: #fff;
+}
+
+.tag-normal {
+    color: var(--newspaper-blue);
+    border: 1px solid var(--newspaper-blue);
+    background: #fff;
+}
+
+.tag-pinned {
+    color: var(--newspaper-orange);
+    font-size: 1rem;
+}
+
+.tag-unread {
+    color: var(--newspaper-orange);
+    background: #fff;
+    border: 1px solid var(--newspaper-orange);
+}
+
+/* 日期样式 - Date Style */
+.article-date {
+    font-size: 0.85rem;
+    color: var(--newspaper-gray);
+    font-style: italic;
+    font-family: 'Times New Roman', serif;
+}
+
+/* 正文样式 - Article Body */
+.article-body {
+    text-align: justify;
+    line-height: 1.8;
+    text-indent: 2em;
+    color: var(--newspaper-border-dark);
+}
+
+/* 分隔线 - Divider */
+.article-divider {
+    border: 0;
+    border-top: 1px solid var(--newspaper-border);
+    margin: 1.5rem 0;
+}
+
+/* 页脚 - Footer */
+.newspaper-footer {
+    background: #1a1a1a;
+    color: var(--newspaper-light-gray);
+    border-top: 3px double var(--newspaper-border-black);
+    padding: 2rem 0;
+    margin-top: 3rem;
+    text-align: center;
+    font-size: 0.85rem;
+}
+
+.newspaper-footer p {
+    margin: 0.5rem 0;
+}
+
+.footer-divider {
+    width: 50%;
+    margin: 1rem auto;
+    border-top: 1px solid #444;
+}
+
+/* 通知数字 - Notification Count */
+.notification-count {
+    color: var(--newspaper-red);
+    font-weight: bold;
+}
+
+/* 链接样式 - Link Styles */
+a.newspaper-link {
+    color: var(--newspaper-border-black);
+    text-decoration: underline;
+}
+
+a.newspaper-link:hover {
+    color: var(--newspaper-border-dark);
+}
+
+/* 消息框 - Message Box */
+.newspaper-message {
+    border: 2px solid var(--newspaper-border-dark);
+    padding: 1rem;
+    margin: 1rem 0;
+    background: #fff;
+}
+
+.newspaper-message.error {
+    border-color: var(--newspaper-red);
+    background: #fff5f5;
+}
+
+.newspaper-message.success {
+    border-color: var(--newspaper-green);
+    background: #f5fff5;
+}
+
+.newspaper-message.warning {
+    border-color: var(--newspaper-orange);
+    background: #fffcf5;
+}
+
+/* 响应式设计 - Responsive Design */
+@media (max-width: 1024px) {
+    .masthead-main-title {
+        font-size: 2.5rem;
+        letter-spacing: 0.2em;
+    }
+    
+    .newspaper-columns-3 {
+        column-count: 2;
+    }
+    
+    .newspaper-columns-4 {
+        column-count: 2;
+    }
+}
+
+@media (max-width: 768px) {
+    .masthead-main-title {
+        font-size: 2rem;
+        letter-spacing: 0.1em;
+    }
+    
+    .masthead-subtitle {
+        font-size: 0.8rem;
+    }
+    
+    .newspaper-nav {
+        font-size: 0.9rem;
+    }
+    
+    .newspaper-nav a {
+        padding: 0.5rem 0.75rem;
+    }
+    
+    .nav-separator {
+        display: none;
+    }
+    
+    .newspaper-columns-2,
+    .newspaper-columns-3,
+    .newspaper-columns-4 {
+        column-count: 1;
+        column-rule: none;
+    }
+    
+    .section-header {
+        font-size: 1.3rem;
+        letter-spacing: 0.1em;
+    }
+    
+    .front-page-title {
+        font-size: 1.8rem;
+    }
+    
+    .article-headline {
+        font-size: 1.1rem;
+    }
+}
+
+/* 用户下拉菜单保留功能 */
+.user-dropdown {
+    position: relative;
+    display: inline-block;
+}
+
+.user-dropdown-content {
+    display: none;
+    position: absolute;
+    right: 0;
+    background-color: #fff;
+    min-width: 200px;
+    border: 2px solid var(--newspaper-border-dark);
+    z-index: 1000;
+    margin-top: 0.5rem;
+}
+
+.user-dropdown:hover .user-dropdown-content {
+    display: block;
+}
+
+.user-dropdown-content a {
+    color: var(--newspaper-border-black);
+    padding: 0.75rem 1rem;
+    text-decoration: none;
+    display: block;
+    border-bottom: 1px solid var(--newspaper-divider);
+}
+
+.user-dropdown-content a:last-child {
+    border-bottom: none;
+}
+
+.user-dropdown-content a:hover {
+    background-color: #f5f1e8;
+}
+
+.user-dropdown-content a.logout {
+    color: var(--newspaper-red);
+    font-weight: bold;
+}
+
+/* 用户头像 */
+.user-avatar {
+    display: inline-block;
+    width: 32px;
+    height: 32px;
+    vertical-align: middle;
+    margin-right: 0.5rem;
+    border: 2px solid var(--newspaper-border-dark);
+}
+
+.user-avatar-placeholder {
+    display: inline-block;
+    width: 32px;
+    height: 32px;
+    background: var(--newspaper-border-dark);
+    color: #fff;
+    text-align: center;
+    line-height: 32px;
+    font-weight: bold;
+    vertical-align: middle;
+    margin-right: 0.5rem;
+    border: 2px solid var(--newspaper-border-dark);
+}
