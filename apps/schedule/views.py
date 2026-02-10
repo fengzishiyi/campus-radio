@@ -18,7 +18,7 @@ def calendar_view(request):
 
 @login_required
 def calendar_events_api(request):
-    """JSON API for FullCalendar events"""
+    """JSON API for FullCalendar events - includes schedules and bookings"""
     start = request.GET.get('start')
     end = request.GET.get('end')
     
@@ -28,6 +28,7 @@ def calendar_events_api(request):
         start_date = datetime.strptime(start[:10], '%Y-%m-%d').date()
         end_date = datetime.strptime(end[:10], '%Y-%m-%d').date()
         
+        # Add schedule events
         schedules = DailySchedule.objects.filter(
             date__gte=start_date,
             date__lte=end_date
@@ -39,11 +40,35 @@ def calendar_events_api(request):
                 for a in schedule.anchors.all()
             ])
             
+            title = f'已排班'
+            if anchor_names:
+                title += f' - {anchor_names}'
+            if schedule.is_live:
+                title += ' 📡'
+            
             events.append({
-                'title': f'已排班 - {anchor_names}' if anchor_names else '已排班',
+                'title': title,
                 'start': schedule.date.isoformat(),
-                'url': f'/broadcast/calendar/{schedule.date}/',
+                'url': f'/studio/{schedule.date}/',
                 'classNames': ['cursor-pointer'],
+                'color': '#0969da' if not schedule.is_live else '#ff6b6b',
+            })
+        
+        # Add booking events
+        from apps.booking.models import StudioBooking
+        bookings = StudioBooking.objects.filter(
+            date__gte=start_date,
+            date__lte=end_date
+        ).exclude(status='cancelled').select_related('user', 'user__profile')
+        
+        for booking in bookings:
+            events.append({
+                'title': f'预约 - {booking.user.profile.real_name}',
+                'start': f'{booking.date}T{booking.start_time}',
+                'end': f'{booking.date}T{booking.end_time}',
+                'url': f'/studio/{booking.date}/',
+                'classNames': ['cursor-pointer'],
+                'color': '#2da44e',
             })
     
     return JsonResponse(events, safe=False)
