@@ -1,5 +1,15 @@
 <!-- Day Detail Content (used in modal) -->
 <div class="space-y-6">
+    <!-- Quick Actions -->
+    <div class="flex gap-2 justify-end">
+        <form method="post" action="{% url 'schedule:copy_previous_day' date|date:'Y-m-d' %}" class="inline">
+            {% csrf_token %}
+            <button type="submit" class="bg-purple-600 hover:bg-purple-700 text-white px-3 py-1 rounded-md text-sm transition">
+                📋 复制前一天
+            </button>
+        </form>
+    </div>
+    
     <!-- Anchors Section -->
     <div class="border-b pb-4">
         <div class="flex justify-between items-center mb-3">

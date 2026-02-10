@@ -3,22 +3,170 @@
 {% block title %}首页 - 校园广播站管理平台{% endblock %}
 
 {% block content %}
-<!-- 头版要闻 - Front Page Section -->
-<div class="front-page-section">
-    <h2 class="front-page-title">━━ 头版要闻 ━━</h2>
-    <div class="front-page-content">
-        <p style="text-align: center; margin-bottom: 1rem;">
-            <strong style="font-size: 1.3rem;">本期导读</strong>
-        </p>
-        <p style="text-indent: 2em;">
-            欢迎，<strong>{{ user.profile.real_name }}</strong>！
-            您的角色为：<strong>{{ user.profile.get_role_display }}</strong>，
-            隶属于：<strong>{{ user.profile.get_department_display }}</strong>。
-        </p>
-        <p style="text-indent: 2em;">
-            本期校园广播站报为您带来最新的公告通知、活动预告、排班信息以及录音室动态。
-            请及时查阅各版块内容，掌握广播站最新动态。
-        </p>
+<!-- 信息栏 - Info Bar -->
+<div class="info-bar">
+    <div class="info-bar-item">
+        <span class="info-bar-icon">📅</span>
+        <div>
+            <div class="info-bar-label">今日日期</div>
+            <div class="info-bar-value">{% now "Y年m月d日 l" %}</div>
+        </div>
+    </div>
+    <div class="info-bar-item">
+        <span class="info-bar-icon">☀️</span>
+        <div>
+            <div class="info-bar-label">天气</div>
+            <div class="info-bar-value">晴天 / 22°C</div>
+        </div>
+    </div>
+    <div class="info-bar-item">
+        <span class="info-bar-icon">🎙️</span>
+        <div>
+            <div class="info-bar-label">今日录音室预约</div>
+            <div class="info-bar-value">{{ today_bookings_count|default:0 }} 个时段</div>
+        </div>
+    </div>
+</div>
+
+<!-- 最新公告 - Announcements Grid -->
+<div class="front-page-announcements">
+    <h2 class="front-page-title">━━ 📋 最新公告 ━━</h2>
+    
+    {% if recent_announcements %}
+        <div class="announcements-grid">
+            {% for announcement in recent_announcements %}
+                <div class="announcement-card {% if announcement.type == 'urgent' %}urgent{% endif %}">
+                    <div class="announcement-card-header">
+                        <span class="announcement-card-type">
+                            {% if announcement.type == 'urgent' %}
+                                🚨 紧急
+                            {% elif announcement.type == 'activity' %}
+                                🎉 活动
+                            {% elif announcement.type == 'schedule_change' %}
+                                📅 排班变更
+                            {% else %}
+                                📢 通知
+                            {% endif %}
+                        </span>
+                        <span class="announcement-card-date">{{ announcement.publish_time|date:"m-d H:i" }}</span>
+                    </div>
+                    <h3 class="announcement-card-title">
+                        <a href="/announcements/{{ announcement.id }}/">{{ announcement.title }}</a>
+                    </h3>
+                    <p class="announcement-card-preview">{{ announcement.content|truncatewords:20 }}</p>
+                </div>
+            {% endfor %}
+        </div>
+        <div class="section-footer">
+            <a href="/announcements/">查看全部公告 →</a>
+        </div>
+    {% else %}
+        <div class="empty-message">
+            <div class="empty-icon">📭</div>
+            <p>暂无公告</p>
+        </div>
+    {% endif %}
+</div>
+
+<!-- 两栏布局 - Today's Studio & Playlist -->
+<div class="newspaper-columns-2">
+    <!-- 左栏：今日录音室安排 -->
+    <div class="timeline-container">
+        <h3 class="timeline-header">🎙️ 今日录音室安排</h3>
+        
+        {% if today_bookings %}
+            <!-- 时间轴刻度 -->
+            <div class="timeline-scale">
+                {% for hour in timeline_hours %}
+                    <span class="timeline-hour">{{ hour }}:00</span>
+                {% endfor %}
+            </div>
+            
+            <!-- 时间块可视化 -->
+            <div class="timeline-bookings">
+                {% for booking in today_bookings %}
+                    <div class="booking-block {{ booking.status }}" 
+                         style="left: {{ booking.start_offset }}%; width: {{ booking.width }}%;"
+                         title="{{ booking.user.profile.real_name }} - {{ booking.purpose }}">
+                        {% if booking.width > 15 %}
+                            {{ booking.user.profile.real_name|truncatewords:1 }}
+                        {% endif %}
+                    </div>
+                {% endfor %}
+            </div>
+            
+            <!-- 预约列表详情 -->
+            <div class="booking-list">
+                {% for booking in today_bookings %}
+                    <div class="booking-item">
+                        <span class="booking-time">{{ booking.start_time|time:"H:i" }}-{{ booking.end_time|time:"H:i" }}</span>
+                        <div class="booking-info">
+                            <div class="booking-user">{{ booking.user.profile.real_name }}</div>
+                            <div class="booking-purpose">{{ booking.purpose }}</div>
+                        </div>
+                        <span class="booking-status {{ booking.status }}">
+                            {% if booking.status == 'pending' %}待确认
+                            {% elif booking.status == 'confirmed' %}已确认
+                            {% elif booking.status == 'completed' %}已完成
+                            {% endif %}
+                        </span>
+                    </div>
+                {% endfor %}
+            </div>
+            
+            <div class="section-footer">
+                <a href="/booking/">完整预约页面 →</a>
+            </div>
+        {% else %}
+            <div class="empty-message">
+                <div class="empty-icon">🎙️</div>
+                <p>今日暂无录音室预约</p>
+            </div>
+            <div class="section-footer">
+                <a href="/booking/create/">立即预约 →</a>
+            </div>
+        {% endif %}
+    </div>
+    
+    <!-- 右栏：今日广播歌单 -->
+    <div class="playlist-container">
+        <h3 class="playlist-header">🎵 今日广播歌单</h3>
+        
+        {% if today_songs %}
+            <ol class="song-list">
+                {% for song in today_songs %}
+                    <li class="song-item">
+                        <span class="song-number">{{ forloop.counter }}.</span>
+                        <span class="song-title">{{ song.title }}</span>
+                        {% if song.artist %}
+                            <span class="song-artist">- {{ song.artist }}</span>
+                        {% endif %}
+                    </li>
+                {% endfor %}
+            </ol>
+        {% else %}
+            <div class="empty-message">
+                <div class="empty-icon">🎵</div>
+                <p>今日暂无歌单安排</p>
+            </div>
+        {% endif %}
+        
+        <!-- 节目安排 -->
+        {% if today_programs %}
+            <div class="programs-section">
+                <h4 class="programs-title">📻 今日节目安排</h4>
+                {% for program in today_programs %}
+                    <div class="program-item">
+                        <div class="program-name">{{ program.name }}</div>
+                        <div class="program-time">{{ program.time_slot }}</div>
+                    </div>
+                {% endfor %}
+            </div>
+        {% endif %}
+        
+        <div class="section-footer">
+            <a href="/broadcast/calendar/">排班日历 →</a>
+        </div>
     </div>
 </div>
 
@@ -56,42 +204,5 @@
             <p class="section-card-desc">音频专辑管理</p>
         </a>
     </div>
-</div>
-
-<!-- 最新公告 - Recent Announcements -->
-<h2 class="section-header">━━ 📋 最新公告 ━━</h2>
-<div class="article-list">
-    {% if recent_announcements %}
-        {% for announcement in recent_announcements %}
-            <div class="article-item">
-                <div class="article-tags">
-                    {% if announcement.type == 'urgent' %}
-                        <span class="tag tag-urgent">紧急</span>
-                    {% elif announcement.type == 'activity' %}
-                        <span class="tag tag-activity">活动</span>
-                    {% elif announcement.type == 'schedule_change' %}
-                        <span class="tag tag-schedule">排班变更</span>
-                    {% else %}
-                        <span class="tag tag-normal">通知</span>
-                    {% endif %}
-                    {% if announcement.is_pinned %}
-                        <span class="tag-pinned">📌</span>
-                    {% endif %}
-                    {% if announcement.is_unread_by user %}
-                        <span class="tag tag-unread">🆕 未读</span>
-                    {% endif %}
-                </div>
-                <h3 class="article-headline">
-                    <a href="/announcements/{{ announcement.id }}/">{{ announcement.title }}</a>
-                </h3>
-                <p class="article-date">{{ announcement.publish_time|date:"Y年m月d日 H:i" }}</p>
-            </div>
-        {% endfor %}
-        <div style="text-align: center; margin-top: 1.5rem; padding-top: 1rem; border-top: 2px solid #000;">
-            <a href="/announcements/" class="newspaper-link" style="font-weight: bold; font-size: 1.1rem;">查看全部公告 →</a>
-        </div>
-    {% else %}
-        <p style="text-align: center; padding: 2rem 0; color: #666; font-style: italic;">暂无公告</p>
-    {% endif %}
 </div>
 {% endblock %}
