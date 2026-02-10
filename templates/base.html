@@ -16,113 +16,125 @@
     <script src='https://cdn.jsdelivr.net/npm/fullcalendar@6.1.10/index.global.min.js'></script>
     <script src='https://cdn.jsdelivr.net/npm/fullcalendar@6.1.10/locales/zh-cn.global.min.js'></script>
     
+    <!-- Newspaper Style CSS -->
+    <link rel="stylesheet" href="{% load static %}{% static 'css/newspaper.css' %}">
+    
     {% block extra_head %}{% endblock %}
 </head>
 <body class="bg-gray-50 min-h-screen">
-    <!-- Top Navigation Bar -->
-    <nav class="bg-blue-600 text-white shadow-lg">
-        <div class="container mx-auto px-4">
-            <div class="flex items-center justify-between h-16">
-                <!-- Logo -->
-                <div class="flex items-center space-x-4">
-                    <a href="/" class="text-2xl font-bold flex items-center">
-                        🎙️ 校园广播站
-                    </a>
-                </div>
-                
-                <!-- Center Menu -->
-                <div class="hidden md:flex space-x-6">
-                    <a href="/broadcast/calendar/" class="hover:text-blue-200 transition">广播站</a>
-                    <a href="/himalaya/" class="hover:text-blue-200 transition">喜马拉雅</a>
-                    <a href="/announcements/" class="hover:text-blue-200 transition">公告</a>
-                    <a href="/booking/" class="hover:text-blue-200 transition">录音室预约</a>
-                </div>
-                
-                <!-- Right Menu -->
-                <div class="flex items-center space-x-4">
-                    {% if user.is_authenticated %}
-                        <!-- Announcements Badge -->
-                        <a href="/announcements/" class="relative hover:text-blue-200 transition">
-                            🔔
-                            {% if unread_announcements_count > 0 %}
-                                <span class="absolute -top-2 -right-2 bg-red-500 text-white text-xs rounded-full h-5 w-5 flex items-center justify-center">
-                                    {{ unread_announcements_count }}
-                                </span>
-                            {% endif %}
-                        </a>
-                        
-                        <!-- User Dropdown -->
-                        <div class="relative group">
-                            <button class="flex items-center space-x-2 hover:text-blue-200 transition">
-                                {% if user.profile.avatar %}
-                                    <img src="{{ user.profile.avatar.url }}" alt="{{ user.profile.real_name }}" class="h-8 w-8 rounded-full">
-                                {% else %}
-                                    <div class="h-8 w-8 rounded-full bg-blue-700 flex items-center justify-center">
-                                        {{ user.profile.real_name|first }}
-                                    </div>
-                                {% endif %}
-                                <span>{{ user.profile.real_name }}</span>
-                            </button>
-                            
-                            <!-- Dropdown Menu -->
-                            <div class="hidden group-hover:block absolute right-0 mt-2 w-48 bg-white text-gray-800 rounded-md shadow-lg z-50">
-                                <a href="/accounts/profile/" class="block px-4 py-2 hover:bg-gray-100">个人信息</a>
-                                <a href="/accounts/members/" class="block px-4 py-2 hover:bg-gray-100">成员列表</a>
-                                {% if user.profile.is_admin %}
-                                    <a href="/accounts/invite-codes/" class="block px-4 py-2 hover:bg-gray-100">邀请码管理</a>
-                                    <a href="/admin/permissions/" class="block px-4 py-2 hover:bg-gray-100">权限配置</a>
-                                {% endif %}
-                                <hr class="my-1">
-                                <a href="/accounts/logout/" class="block px-4 py-2 hover:bg-gray-100 text-red-600">登出</a>
-                            </div>
-                        </div>
-                    {% else %}
-                        <a href="/accounts/login/" class="bg-blue-700 hover:bg-blue-800 px-4 py-2 rounded-md transition">登录</a>
-                        <a href="/accounts/register/" class="bg-orange-500 hover:bg-orange-600 px-4 py-2 rounded-md transition">注册</a>
-                    {% endif %}
-                </div>
-            </div>
+    <!-- Newspaper Masthead -->
+    <header class="newspaper-masthead">
+        <div class="masthead-decoration-top"></div>
+        <div class="masthead-title">
+            <div class="masthead-logo">🎙️</div>
+            <h1 class="masthead-main-title">校园广播站报</h1>
+            <p class="masthead-subtitle">CAMPUS RADIO STATION DAILY</p>
         </div>
+        <div class="masthead-meta">
+            <span class="masthead-date" id="current-date"></span>
+            <span class="masthead-issue">第001期</span>
+        </div>
+        <div class="masthead-decoration-bottom"></div>
+    </header>
+    
+    <!-- User Info Bar -->
+    {% if user.is_authenticated %}
+    <div class="newspaper-user-bar">
+        <div class="container">
+            欢迎, <strong>{{ user.profile.real_name }}</strong>
+            {% if unread_announcements_count > 0 %}
+                <a href="/announcements/" class="notification-count">({{ unread_announcements_count }}) 条新通知</a>
+            {% endif %}
+            <span class="user-dropdown">
+                {% if user.profile.avatar %}
+                    <img src="{{ user.profile.avatar.url }}" alt="{{ user.profile.real_name }}" class="user-avatar">
+                {% else %}
+                    <span class="user-avatar-placeholder">{{ user.profile.real_name|first }}</span>
+                {% endif %}
+                <span style="cursor: pointer;">▼</span>
+                <div class="user-dropdown-content">
+                    <a href="/accounts/profile/">个人信息</a>
+                    <a href="/accounts/members/">成员列表</a>
+                    {% if user.profile.is_admin %}
+                        <a href="/accounts/invite-codes/">邀请码管理</a>
+                        <a href="/admin/permissions/">权限配置</a>
+                    {% endif %}
+                    <a href="/accounts/logout/" class="logout">登出</a>
+                </div>
+            </span>
+        </div>
+    </div>
+    {% endif %}
+    
+    <!-- Newspaper Navigation -->
+    <nav class="newspaper-nav">
+        <a href="/">头版</a>
+        <span class="nav-separator">|</span>
+        <a href="/announcements/">公告</a>
+        <span class="nav-separator">|</span>
+        <a href="/broadcast/calendar/">排班</a>
+        <span class="nav-separator">|</span>
+        <a href="/booking/">录音室</a>
+        <span class="nav-separator">|</span>
+        <a href="/himalaya/">喜马拉雅</a>
+        {% if not user.is_authenticated %}
+        <span class="nav-separator">|</span>
+        <a href="/accounts/login/">登录</a>
+        <span class="nav-separator">|</span>
+        <a href="/accounts/register/">注册</a>
+        {% endif %}
     </nav>
     
     <!-- Urgent Announcements Banner -->
     {% if urgent_announcements %}
-        <div class="bg-red-500 text-white py-2 px-4">
-            <div class="container mx-auto flex items-center">
-                <span class="font-bold mr-4">⚠️ 紧急公告:</span>
-                <div class="flex-1 overflow-x-auto whitespace-nowrap">
-                    {% for announcement in urgent_announcements %}
-                        <a href="/announcements/{{ announcement.id }}/" class="hover:underline mx-2">
-                            {{ announcement.title }}
-                        </a>
-                    {% endfor %}
-                </div>
-            </div>
+        <div class="newspaper-urgent-banner">
+            <span class="urgent-label">⚠️ 号外</span>
+            {% for announcement in urgent_announcements %}
+                <a href="/announcements/{{ announcement.id }}/">
+                    {{ announcement.title }}
+                </a>
+            {% endfor %}
         </div>
     {% endif %}
     
     <!-- Messages -->
     {% if messages %}
-        <div class="container mx-auto px-4 mt-4">
+        <div class="newspaper-container">
             {% for message in messages %}
-                <div class="{% if message.tags == 'error' %}bg-red-100 border-red-400 text-red-700{% elif message.tags == 'success' %}bg-green-100 border-green-400 text-green-700{% elif message.tags == 'warning' %}bg-yellow-100 border-yellow-400 text-yellow-700{% else %}bg-blue-100 border-blue-400 text-blue-700{% endif %} border px-4 py-3 rounded relative mb-4" role="alert">
-                    <span class="block sm:inline">{{ message }}</span>
+                <div class="newspaper-message {% if message.tags == 'error' %}error{% elif message.tags == 'success' %}success{% elif message.tags == 'warning' %}warning{% endif %}" role="alert">
+                    <span>{{ message }}</span>
                 </div>
             {% endfor %}
         </div>
     {% endif %}
     
     <!-- Main Content -->
-    <main class="container mx-auto px-4 py-8">
+    <main class="newspaper-container">
         {% block content %}{% endblock %}
     </main>
     
     <!-- Footer -->
-    <footer class="bg-gray-800 text-white mt-12 py-6">
-        <div class="container mx-auto px-4 text-center">
-            <p>&copy; 2026 校园广播站管理平台 | 内容管理系统</p>
-        </div>
+    <footer class="newspaper-footer">
+        <div class="footer-divider"></div>
+        <p><strong>校园广播站报</strong> | Campus Radio Station Daily</p>
+        <p>&copy; 2026 校园广播站管理平台 | 编辑部出品</p>
+        <p style="font-size: 0.75rem; margin-top: 1rem;">本报由校园广播站编辑部制作发行</p>
     </footer>
+    
+    <!-- JavaScript for dynamic date -->
+    <script>
+        // Set current date in masthead
+        const dateElement = document.getElementById('current-date');
+        if (dateElement) {
+            const now = new Date();
+            const year = now.getFullYear();
+            const month = now.getMonth() + 1;
+            const day = now.getDate();
+            const days = ['日', '一', '二', '三', '四', '五', '六'];
+            const dayOfWeek = days[now.getDay()];
+            dateElement.textContent = `${year}年${month}月${day}日 星期${dayOfWeek}`;
+        }
+    </script>
     
     {% block extra_js %}{% endblock %}
 </body>

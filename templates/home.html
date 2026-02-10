@@ -3,86 +3,95 @@
 {% block title %}首页 - 校园广播站管理平台{% endblock %}
 
 {% block content %}
-<div class="max-w-6xl mx-auto">
-    <!-- Welcome Section -->
-    <div class="bg-white rounded-lg shadow-md p-8 mb-8">
-        <h1 class="text-3xl font-bold text-gray-800 mb-4">
-            欢迎，{{ user.profile.real_name }}！
-        </h1>
-        <p class="text-gray-600 mb-2">
-            角色：<span class="font-semibold text-blue-600">{{ user.profile.get_role_display }}</span>
+<!-- 头版要闻 - Front Page Section -->
+<div class="front-page-section">
+    <h2 class="front-page-title">━━ 头版要闻 ━━</h2>
+    <div class="front-page-content">
+        <p style="text-align: center; margin-bottom: 1rem;">
+            <strong style="font-size: 1.3rem;">本期导读</strong>
         </p>
-        <p class="text-gray-600">
-            部门：<span class="font-semibold text-blue-600">{{ user.profile.get_department_display }}</span>
+        <p style="text-indent: 2em;">
+            欢迎，<strong>{{ user.profile.real_name }}</strong>！
+            您的角色为：<strong>{{ user.profile.get_role_display }}</strong>，
+            隶属于：<strong>{{ user.profile.get_department_display }}</strong>。
+        </p>
+        <p style="text-indent: 2em;">
+            本期校园广播站报为您带来最新的公告通知、活动预告、排班信息以及录音室动态。
+            请及时查阅各版块内容，掌握广播站最新动态。
         </p>
     </div>
+</div>
 
-    <!-- Quick Links -->
-    <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6 mb-8">
-        <a href="/announcements/" class="bg-gradient-to-br from-blue-500 to-blue-600 text-white rounded-lg shadow-md p-6 hover:shadow-lg transition transform hover:-translate-y-1">
-            <div class="text-4xl mb-3">📢</div>
-            <h3 class="text-xl font-bold mb-2">公告系统</h3>
-            <p class="text-blue-100 text-sm">查看最新公告和通知</p>
-        </a>
-
-        <a href="/broadcast/calendar/" class="bg-gradient-to-br from-green-500 to-green-600 text-white rounded-lg shadow-md p-6 hover:shadow-lg transition transform hover:-translate-y-1">
-            <div class="text-4xl mb-3">📅</div>
-            <h3 class="text-xl font-bold mb-2">日历排班</h3>
-            <p class="text-green-100 text-sm">管理广播站日程</p>
-        </a>
-
-        <a href="/booking/" class="bg-gradient-to-br from-purple-500 to-purple-600 text-white rounded-lg shadow-md p-6 hover:shadow-lg transition transform hover:-translate-y-1">
-            <div class="text-4xl mb-3">🎙️</div>
-            <h3 class="text-xl font-bold mb-2">录音室预约</h3>
-            <p class="text-purple-100 text-sm">预约使用录音室</p>
-        </a>
-
-        <a href="/himalaya/" class="bg-gradient-to-br from-orange-500 to-orange-600 text-white rounded-lg shadow-md p-6 hover:shadow-lg transition transform hover:-translate-y-1">
-            <div class="text-4xl mb-3">🎧</div>
-            <h3 class="text-xl font-bold mb-2">喜马拉雅</h3>
-            <p class="text-orange-100 text-sm">音频专辑管理</p>
+<!-- 快速导航 - Quick Navigation Sections -->
+<h2 class="section-header">━━ 各版块导航 ━━</h2>
+<div class="newspaper-columns-4">
+    <div class="section-card">
+        <a href="/announcements/">
+            <div class="section-card-icon">📢</div>
+            <h3 class="section-card-title">公告专栏</h3>
+            <p class="section-card-desc">查看最新公告和通知</p>
         </a>
     </div>
 
-    <!-- Recent Announcements -->
-    <div class="bg-white rounded-lg shadow-md p-6">
-        <h2 class="text-2xl font-bold text-gray-800 mb-4">📋 最新公告</h2>
-        {% if recent_announcements %}
-            <div class="space-y-3">
-                {% for announcement in recent_announcements %}
-                    <a href="/announcements/{{ announcement.id }}/" class="block p-4 rounded-lg border border-gray-200 hover:bg-gray-50 transition">
-                        <div class="flex items-start justify-between">
-                            <div class="flex-1">
-                                <div class="flex items-center space-x-2 mb-1">
-                                    {% if announcement.type == 'urgent' %}
-                                        <span class="px-2 py-1 bg-red-100 text-red-800 text-xs rounded-full">紧急</span>
-                                    {% elif announcement.type == 'activity' %}
-                                        <span class="px-2 py-1 bg-green-100 text-green-800 text-xs rounded-full">活动</span>
-                                    {% elif announcement.type == 'schedule_change' %}
-                                        <span class="px-2 py-1 bg-yellow-100 text-yellow-800 text-xs rounded-full">排班变更</span>
-                                    {% else %}
-                                        <span class="px-2 py-1 bg-blue-100 text-blue-800 text-xs rounded-full">通知</span>
-                                    {% endif %}
-                                    {% if announcement.is_pinned %}
-                                        <span class="text-orange-500">📌</span>
-                                    {% endif %}
-                                    {% if announcement.is_unread_by user %}
-                                        <span class="px-2 py-1 bg-orange-100 text-orange-800 text-xs rounded-full">🆕 未读</span>
-                                    {% endif %}
-                                </div>
-                                <h3 class="font-semibold text-gray-800">{{ announcement.title }}</h3>
-                                <p class="text-sm text-gray-500 mt-1">{{ announcement.publish_time|date:"Y-m-d H:i" }}</p>
-                            </div>
-                        </div>
-                    </a>
-                {% endfor %}
-            </div>
-            <div class="mt-4 text-center">
-                <a href="/announcements/" class="text-blue-600 hover:text-blue-800 font-semibold">查看全部公告 →</a>
-            </div>
-        {% else %}
-            <p class="text-gray-500 text-center py-8">暂无公告</p>
-        {% endif %}
+    <div class="section-card">
+        <a href="/broadcast/calendar/">
+            <div class="section-card-icon">📅</div>
+            <h3 class="section-card-title">排班信息</h3>
+            <p class="section-card-desc">管理广播站日程</p>
+        </a>
     </div>
+
+    <div class="section-card">
+        <a href="/booking/">
+            <div class="section-card-icon">🎙️</div>
+            <h3 class="section-card-title">录音室</h3>
+            <p class="section-card-desc">预约使用录音室</p>
+        </a>
+    </div>
+
+    <div class="section-card">
+        <a href="/himalaya/">
+            <div class="section-card-icon">🎧</div>
+            <h3 class="section-card-title">喜马拉雅</h3>
+            <p class="section-card-desc">音频专辑管理</p>
+        </a>
+    </div>
+</div>
+
+<!-- 最新公告 - Recent Announcements -->
+<h2 class="section-header">━━ 📋 最新公告 ━━</h2>
+<div class="article-list">
+    {% if recent_announcements %}
+        {% for announcement in recent_announcements %}
+            <div class="article-item">
+                <div class="article-tags">
+                    {% if announcement.type == 'urgent' %}
+                        <span class="tag tag-urgent">紧急</span>
+                    {% elif announcement.type == 'activity' %}
+                        <span class="tag tag-activity">活动</span>
+                    {% elif announcement.type == 'schedule_change' %}
+                        <span class="tag tag-schedule">排班变更</span>
+                    {% else %}
+                        <span class="tag tag-normal">通知</span>
+                    {% endif %}
+                    {% if announcement.is_pinned %}
+                        <span class="tag-pinned">📌</span>
+                    {% endif %}
+                    {% if announcement.is_unread_by user %}
+                        <span class="tag tag-unread">🆕 未读</span>
+                    {% endif %}
+                </div>
+                <h3 class="article-headline">
+                    <a href="/announcements/{{ announcement.id }}/">{{ announcement.title }}</a>
+                </h3>
+                <p class="article-date">{{ announcement.publish_time|date:"Y年m月d日 H:i" }}</p>
+            </div>
+        {% endfor %}
+        <div style="text-align: center; margin-top: 1.5rem; padding-top: 1rem; border-top: 2px solid #000;">
+            <a href="/announcements/" class="newspaper-link" style="font-weight: bold; font-size: 1.1rem;">查看全部公告 →</a>
+        </div>
+    {% else %}
+        <p style="text-align: center; padding: 2rem 0; color: #666; font-style: italic;">暂无公告</p>
+    {% endif %}
 </div>
 {% endblock %}
