@@ -165,7 +165,7 @@
         <h3 class="gh-card-header">🎙️ 录音室预约</h3>
         
         <div style="margin-bottom: 16px;">
-            <a href="/booking/create/?date={{ date|date:'Y-m-d' }}" class="gh-btn gh-btn-primary" style="width: 100%; text-align: center; display: inline-block;">创建预约</a>
+            <a href="{% url 'booking:create' %}?date={{ date|date:'Y-m-d' }}" class="gh-btn gh-btn-primary" style="width: 100%; text-align: center; display: inline-block;">创建预约</a>
         </div>
         
         <div style="border-top: 1px solid var(--gh-border-muted); padding-top: 12px;">

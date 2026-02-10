@@ -3,7 +3,7 @@ from django.http import JsonResponse
 from django.contrib.auth.decorators import login_required
 from django.contrib import messages
 from django.views.decorators.http import require_POST
-from django.db import models
+from django.db.models import Max
 from datetime import datetime, date, timedelta
 from apps.permissions.decorators import module_permission_required
 from .models import Group, DailySchedule, Program, Song
@@ -460,7 +460,7 @@ def upload_song_view(request, date_str):
         return JsonResponse({'error': '请上传音频文件'}, status=400)
     
     # Get the max order
-    max_order = schedule.songs.aggregate(models.Max('order'))['order__max'] or 0
+    max_order = schedule.songs.aggregate(Max('order'))['order__max'] or 0
     
     song = Song.objects.create(
         schedule=schedule,
