@@ -186,12 +186,11 @@ def fill_from_group_view(request, date_str):
             schedule.anchors.add(group.leader)
         
         # Add all members
-        member_count = 0
         for member in group.members.all():
             schedule.anchors.add(member)
-            member_count += 1
         
-        total_count = (1 if group.leader else 0) + member_count
+        # Count total anchors added
+        total_count = schedule.anchors.count()
         messages.success(request, f'已从 {group.name} 填充 {total_count} 位播音员')
     except Group.DoesNotExist:
         messages.warning(request, f'该日期（{target_date.strftime("%A")}）没有对应的分组')

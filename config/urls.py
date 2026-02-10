@@ -21,6 +21,11 @@ from django.conf.urls.static import static
 from django.views.generic import TemplateView
 from django.contrib.auth.decorators import login_required
 
+# Studio operating hours constants
+STUDIO_OPEN_HOUR = 8  # 8:00 AM
+STUDIO_CLOSE_HOUR = 22  # 10:00 PM
+STUDIO_OPERATING_HOURS = STUDIO_CLOSE_HOUR - STUDIO_OPEN_HOUR  # 14 hours
+
 class HomeView(TemplateView):
     template_name = 'home.html'
     
@@ -49,14 +54,14 @@ class HomeView(TemplateView):
                 date=today
             ).exclude(status='cancelled').select_related('user', 'user__profile').order_by('start_time')
             
-            # 计算时间轴数据（基于8:00-22:00，14小时范围）
+            # 计算时间轴数据（基于录音室开放时间）
             bookings_with_offset = []
             for booking in today_bookings:
                 start_hour = booking.start_time.hour + booking.start_time.minute / 60
                 end_hour = booking.end_time.hour + booking.end_time.minute / 60
                 
-                start_offset = ((start_hour - 8) / 14) * 100
-                width = ((end_hour - start_hour) / 14) * 100
+                start_offset = ((start_hour - STUDIO_OPEN_HOUR) / STUDIO_OPERATING_HOURS) * 100
+                width = ((end_hour - start_hour) / STUDIO_OPERATING_HOURS) * 100
                 
                 bookings_with_offset.append({
                     'user': booking.user,
@@ -70,7 +75,7 @@ class HomeView(TemplateView):
             
             context['today_bookings'] = bookings_with_offset
             context['today_bookings_count'] = today_bookings.count()
-            context['timeline_hours'] = range(8, 23)
+            context['timeline_hours'] = range(STUDIO_OPEN_HOUR, STUDIO_CLOSE_HOUR + 1)
             
             # 今日歌单和节目
             try:
