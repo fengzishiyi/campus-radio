@@ -33,6 +33,7 @@ class DailySchedule(models.Model):
     
     date = models.DateField('日期', unique=True)
     anchors = models.ManyToManyField(User, blank=True, related_name='daily_schedules', verbose_name='播音员')
+    is_live = models.BooleanField('是否直播', default=False, help_text='16:00-18:00直播标记')
     created_by = models.ForeignKey(User, on_delete=models.SET_NULL, null=True, blank=True, related_name='created_schedules', verbose_name='创建者')
     created_at = models.DateTimeField(auto_now_add=True)
     updated_at = models.DateTimeField(auto_now=True)
@@ -69,6 +70,7 @@ class Song(models.Model):
     schedule = models.ForeignKey(DailySchedule, on_delete=models.CASCADE, related_name='songs', verbose_name='日程')
     title = models.CharField('歌曲名', max_length=100)
     artist = models.CharField('歌手', max_length=100, blank=True)
+    audio_file = models.FileField('音频文件', upload_to='daily_songs/%Y/%m/%d/', blank=True, null=True, help_text='上传的MP3等音频文件')
     order = models.IntegerField('排序', default=0)
     
     class Meta:
