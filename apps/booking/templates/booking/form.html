@@ -26,27 +26,16 @@
                 {% endif %}
             </div>
 
-            <!-- Start Time -->
+            <!-- Time Slot -->
             <div>
-                <label for="{{ form.start_time.id_for_label }}" class="block text-sm font-medium text-gray-700">
-                    {{ form.start_time.label }}
+                <label for="{{ form.time_slot.id_for_label }}" class="block text-sm font-medium text-gray-700">
+                    {{ form.time_slot.label }}
                 </label>
-                {{ form.start_time }}
-                {% if form.start_time.errors %}
-                    <p class="mt-1 text-sm text-red-600">{{ form.start_time.errors.0 }}</p>
+                {{ form.time_slot }}
+                {% if form.time_slot.errors %}
+                    <p class="mt-1 text-sm text-red-600">{{ form.time_slot.errors.0 }}</p>
                 {% endif %}
-                <p class="mt-1 text-sm text-gray-500">开放时间：8:00 - 22:00</p>
-            </div>
-
-            <!-- End Time -->
-            <div>
-                <label for="{{ form.end_time.id_for_label }}" class="block text-sm font-medium text-gray-700">
-                    {{ form.end_time.label }}
-                </label>
-                {{ form.end_time }}
-                {% if form.end_time.errors %}
-                    <p class="mt-1 text-sm text-red-600">{{ form.end_time.errors.0 }}</p>
-                {% endif %}
+                <p class="mt-1 text-sm text-gray-500">请选择一个可用的时间段</p>
             </div>
 
             <!-- Purpose -->
@@ -84,7 +73,8 @@
         <h3 class="font-bold text-blue-800 mb-2">预约须知</h3>
         <ul class="text-sm text-blue-700 space-y-1 list-disc list-inside">
             <li>录音室开放时间为每天 8:00 - 22:00</li>
-            <li>请提前规划好时间，避免时间冲突</li>
+            <li>可选时间段：上午 8:00-10:00、10:00-12:00，下午 14:00-16:00、16:00-18:00，晚上 19:00-21:00、21:00-22:00</li>
+            <li>每个时间段只能有一个预约，请提前规划</li>
             <li>预约后请准时到达，如需取消请提前操作</li>
             <li>预约将自动设置为"已确认"状态</li>
         </ul>
