@@ -3,24 +3,42 @@
    Vintage Newspaper Style CSS
    =================================== */
 
+/* CSS Custom Properties - Root Variables */
+:root {
+    --newspaper-bg: #FAF7F0;
+    --newspaper-text: #1a1a1a;
+    --newspaper-border: #ccc;
+    --newspaper-border-dark: #333;
+    --newspaper-border-black: #000;
+    --newspaper-red: #c00;
+    --newspaper-green: #070;
+    --newspaper-orange: #c60;
+    --newspaper-blue: #006;
+    --newspaper-gray: #666;
+    --newspaper-light-gray: #999;
+    --newspaper-divider: #ddd;
+}
+
 /* 全局样式 - Global Styles */
 body {
-    background-color: #FAF7F0 !important;
-    color: #1a1a1a !important;
-    font-family: 'Noto Serif SC', 'SimSun', 'Times New Roman', serif !important;
+    background-color: var(--newspaper-bg);
+    color: var(--newspaper-text);
+    font-family: 'Noto Serif SC', 'SimSun', 'Times New Roman', serif;
     line-height: 1.8;
 }
 
 /* 移除所有现代化效果 - Remove Modern Effects */
-* {
-    box-shadow: none !important;
-    border-radius: 0 !important;
+*,
+*::before,
+*::after {
+    box-shadow: none;
+    border-radius: 0;
 }
 
 /* 报头样式 - Newspaper Masthead */
 .newspaper-masthead {
     background: linear-gradient(to bottom, #f5f1e8, #ffffff);
-    border-bottom: 4px double #000;
+    border-bottom: 4px double var(--newspaper-border-black);
     padding: 2rem 0 1rem;
     text-align: center;
     margin-bottom: 0;
@@ -28,7 +46,7 @@ body {
 
 .masthead-decoration-top {
     height: 2px;
-    background: #000;
+    background: var(--newspaper-border-black);
     margin: 0 auto 1rem;
     width: 90%;
 }
@@ -47,7 +65,7 @@ body {
     font-weight: 900;
     letter-spacing: 0.3em;
     font-family: 'Noto Sans SC', 'Microsoft YaHei', 'Arial Black', sans-serif;
-    color: #000;
+    color: var(--newspaper-border-black);
     margin: 0.5rem 0;
     text-shadow: 2px 2px 0px rgba(0,0,0,0.1);
 }
@@ -55,7 +73,7 @@ body {
 .masthead-subtitle {
     font-size: 0.9rem;
     letter-spacing: 0.15em;
-    color: #666;
+    color: var(--newspaper-gray);
     font-family: 'Times New Roman', serif;
     font-style: italic;
     margin-top: 0.5rem;
@@ -68,7 +86,7 @@ body {
     gap: 2rem;
     margin: 1rem 0;
     font-size: 0.9rem;
-    color: #333;
+    color: var(--newspaper-border-dark);
 }
 
 .masthead-date {
@@ -76,13 +94,13 @@ body {
 }
 
 .masthead-issue {
-    border-left: 1px solid #999;
+    border-left: 1px solid var(--newspaper-light-gray);
     padding-left: 2rem;
 }
 
 .masthead-decoration-bottom {
     height: 3px;
-    background: #000;
+    background: var(--newspaper-border-black);
     margin: 1rem auto 0;
     width: 90%;
 }
@@ -90,7 +108,7 @@ body {
 /* 导航栏 - Navigation */
 .newspaper-nav {
     background: #f5f1e8;
-    border-bottom: 2px solid #000;
+    border-bottom: 2px solid var(--newspaper-border-black);
     padding: 0.75rem 0;
     text-align: center;
     font-size: 1.1rem;
@@ -98,7 +116,7 @@ body {
 }
 
 .newspaper-nav a {
-    color: #000;
+    color: var(--newspaper-border-black);
     text-decoration: none;
     font-weight: 600;
     padding: 0.5rem 1.5rem;
@@ -111,14 +129,14 @@ body {
 }
 
 .nav-separator {
-    color: #999;
+    color: var(--newspaper-light-gray);
     margin: 0 0.5rem;
 }
 
 /* 用户信息栏 - User Info */
 .newspaper-user-bar {
     background: #fff;
-    border-bottom: 1px solid #ccc;
+    border-bottom: 1px solid var(--newspaper-border);
     padding: 0.5rem 0;
     font-size: 0.85rem;
     text-align: right;
@@ -131,7 +149,7 @@ body {
 }
 
 .newspaper-user-bar a {
-    color: #333;
+    color: var(--newspaper-border-dark);
     margin-left: 1rem;
     text-decoration: none;
 }
@@ -144,15 +162,15 @@ body {
 .newspaper-urgent-banner {
     background: #1a1a1a;
     color: #fff;
-    border-top: 3px solid #c00;
-    border-bottom: 3px solid #c00;
+    border-top: 3px solid var(--newspaper-red);
+    border-bottom: 3px solid var(--newspaper-red);
     padding: 1rem;
     text-align: center;
     font-weight: bold;
 }
 
 .urgent-label {
-    background: #c00;
+    background: var(--newspaper-red);
     color: #fff;
     padding: 0.25rem 0.75rem;
     margin-right: 1rem;
@@ -171,13 +189,13 @@ body {
     max-width: 1200px;
     margin: 0 auto;
     padding: 2rem 1rem;
-    background: #FAF7F0;
+    background: var(--newspaper-bg);
 }
 
 /* 版块标题 - Section Header */
 .section-header {
-    border-top: 3px double #000;
-    border-bottom: 3px double #000;
+    border-top: 3px double var(--newspaper-border-black);
+    border-bottom: 3px double var(--newspaper-border-black);
     padding: 0.75rem 0;
     margin: 2rem 0 1.5rem;
     text-align: center;
@@ -190,7 +208,7 @@ body {
 /* 头版要闻 - Front Page */
 .front-page-section {
     background: #fff;
-    border: 3px solid #000;
+    border: 3px solid var(--newspaper-border-black);
     padding: 2rem;
     margin-bottom: 2rem;
 }
@@ -202,7 +220,7 @@ body {
     margin-bottom: 1.5rem;
     font-family: 'Noto Sans SC', 'Microsoft YaHei', sans-serif;
     letter-spacing: 0.1em;
-    border-bottom: 2px solid #000;
+    border-bottom: 2px solid var(--newspaper-border-black);
     padding-bottom: 1rem;
 }
 
@@ -215,19 +233,19 @@ body {
 .newspaper-columns-2 {
     column-count: 2;
     column-gap: 2rem;
-    column-rule: 1px solid #999;
+    column-rule: 1px solid var(--newspaper-light-gray);
 }
 
 .newspaper-columns-3 {
     column-count: 3;
     column-gap: 1.5rem;
-    column-rule: 1px solid #999;
+    column-rule: 1px solid var(--newspaper-light-gray);
 }
 
 .newspaper-columns-4 {
     column-count: 4;
     column-gap: 1.25rem;
-    column-rule: 1px solid #999;
+    column-rule: 1px solid var(--newspaper-light-gray);
 }
 
 /* 防止分栏内元素断裂 */
@@ -241,7 +259,7 @@ body {
 /* 栏目卡片 - Section Card */
 .section-card {
     background: #fff;
-    border: 2px solid #333;
+    border: 2px solid var(--newspaper-border-dark);
     padding: 1.5rem;
     margin-bottom: 1.5rem;
     break-inside: avoid;
@@ -259,36 +277,36 @@ body {
     text-align: center;
     margin-bottom: 0.75rem;
     font-family: 'Noto Sans SC', 'Microsoft YaHei', sans-serif;
-    border-bottom: 2px solid #000;
+    border-bottom: 2px solid var(--newspaper-border-black);
     padding-bottom: 0.5rem;
 }
 
 .section-card-desc {
     font-size: 0.9rem;
     text-align: center;
-    color: #666;
+    color: var(--newspaper-gray);
 }
 
 .section-card a {
-    color: #000;
+    color: var(--newspaper-border-black);
     text-decoration: none;
     display: block;
 }
 
 .section-card:hover {
     background: #f9f9f9;
-    border-color: #000;
+    border-color: var(--newspaper-border-black);
 }
 
 /* 文章列表 - Article List */
 .article-list {
     background: #fff;
-    border: 2px solid #333;
+    border: 2px solid var(--newspaper-border-dark);
     padding: 1.5rem;
 }
 
 .article-item {
-    border-bottom: 1px solid #ddd;
+    border-bottom: 1px solid var(--newspaper-divider);
     padding: 1.25rem 0;
 }
 
@@ -317,11 +335,11 @@ body {
     line-height: 1.4;
     margin: 0.5rem 0;
     font-family: 'Noto Sans SC', 'Microsoft YaHei', sans-serif;
-    color: #000;
+    color: var(--newspaper-border-black);
 }
 
 .article-headline a {
-    color: #000;
+    color: var(--newspaper-border-black);
     text-decoration: none;
 }
 
@@ -341,44 +359,44 @@ body {
 .tag::after { content: "]"; }
 
 .tag-urgent {
-    color: #c00;
-    border: 1px solid #c00;
+    color: var(--newspaper-red);
+    border: 1px solid var(--newspaper-red);
     background: #fff;
 }
 
 .tag-activity {
-    color: #070;
-    border: 1px solid #070;
+    color: var(--newspaper-green);
+    border: 1px solid var(--newspaper-green);
     background: #fff;
 }
 
 .tag-schedule {
-    color: #c60;
-    border: 1px solid #c60;
+    color: var(--newspaper-orange);
+    border: 1px solid var(--newspaper-orange);
     background: #fff;
 }
 
 .tag-normal {
-    color: #006;
-    border: 1px solid #006;
+    color: var(--newspaper-blue);
+    border: 1px solid var(--newspaper-blue);
     background: #fff;
 }
 
 .tag-pinned {
-    color: #c60;
+    color: var(--newspaper-orange);
     font-size: 1rem;
 }
 
 .tag-unread {
-    color: #c60;
+    color: var(--newspaper-orange);
     background: #fff;
-    border: 1px solid #c60;
+    border: 1px solid var(--newspaper-orange);
 }
 
 /* 日期样式 - Date Style */
 .article-date {
     font-size: 0.85rem;
-    color: #666;
+    color: var(--newspaper-gray);
     font-style: italic;
     font-family: 'Times New Roman', serif;
 }
@@ -388,21 +406,21 @@ body {
     text-align: justify;
     line-height: 1.8;
     text-indent: 2em;
-    color: #333;
+    color: var(--newspaper-border-dark);
 }
 
 /* 分隔线 - Divider */
 .article-divider {
     border: 0;
-    border-top: 1px solid #ccc;
+    border-top: 1px solid var(--newspaper-border);
     margin: 1.5rem 0;
 }
 
 /* 页脚 - Footer */
 .newspaper-footer {
     background: #1a1a1a;
-    color: #999;
-    border-top: 3px double #000;
+    color: var(--newspaper-light-gray);
+    border-top: 3px double var(--newspaper-border-black);
     padding: 2rem 0;
     margin-top: 3rem;
     text-align: center;
@@ -421,40 +439,40 @@ body {
 
 /* 通知数字 - Notification Count */
 .notification-count {
-    color: #c00;
+    color: var(--newspaper-red);
     font-weight: bold;
 }
 
 /* 链接样式 - Link Styles */
 a.newspaper-link {
-    color: #000;
+    color: var(--newspaper-border-black);
     text-decoration: underline;
 }
 
 a.newspaper-link:hover {
-    color: #333;
+    color: var(--newspaper-border-dark);
 }
 
 /* 消息框 - Message Box */
 .newspaper-message {
-    border: 2px solid #333;
+    border: 2px solid var(--newspaper-border-dark);
     padding: 1rem;
     margin: 1rem 0;
     background: #fff;
 }
 
 .newspaper-message.error {
-    border-color: #c00;
+    border-color: var(--newspaper-red);
     background: #fff5f5;
 }
 
 .newspaper-message.success {
-    border-color: #070;
+    border-color: var(--newspaper-green);
     background: #f5fff5;
 }
 
 .newspaper-message.warning {
-    border-color: #c60;
+    border-color: var(--newspaper-orange);
     background: #fffcf5;
 }
 
@@ -529,7 +547,7 @@ a.newspaper-link:hover {
     right: 0;
     background-color: #fff;
     min-width: 200px;
-    border: 2px solid #333;
+    border: 2px solid var(--newspaper-border-dark);
     z-index: 1000;
     margin-top: 0.5rem;
 }
@@ -539,11 +557,11 @@ a.newspaper-link:hover {
 }
 
 .user-dropdown-content a {
-    color: #000;
+    color: var(--newspaper-border-black);
     padding: 0.75rem 1rem;
     text-decoration: none;
     display: block;
-    border-bottom: 1px solid #ddd;
+    border-bottom: 1px solid var(--newspaper-divider);
 }
 
 .user-dropdown-content a:last-child {
@@ -555,7 +573,7 @@ a.newspaper-link:hover {
 }
 
 .user-dropdown-content a.logout {
-    color: #c00;
+    color: var(--newspaper-red);
     font-weight: bold;
 }
 
@@ -566,19 +584,19 @@ a.newspaper-link:hover {
     height: 32px;
     vertical-align: middle;
     margin-right: 0.5rem;
-    border: 2px solid #333;
+    border: 2px solid var(--newspaper-border-dark);
 }
 
 .user-avatar-placeholder {
     display: inline-block;
     width: 32px;
     height: 32px;
-    background: #333;
+    background: var(--newspaper-border-dark);
     color: #fff;
     text-align: center;
     line-height: 32px;
     font-weight: bold;
     vertical-align: middle;
     margin-right: 0.5rem;
-    border: 2px solid #333;
+    border: 2px solid var(--newspaper-border-dark);
 }
