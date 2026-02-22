@@ -1,8 +1,25 @@
-// 主 JavaScript 文件
+// 主 JavaScript 文件 — Vue 3 + Vuetify 3
 
-// DOM 加载完成后执行
-document.addEventListener('DOMContentLoaded', function() {
-    console.log('校园广播站管理系统已加载');
-    
-    // 这里可以添加您的自定义 JavaScript 代码
+const { createApp } = Vue;
+const { createVuetify } = Vuetify;
+
+const vuetify = createVuetify({
+    theme: {
+        defaultTheme: 'light',
+        themes: {
+            light: {
+                colors: {
+                    primary: '#3F51B5',
+                },
+            },
+        },
+    },
 });
+
+const app = createApp({
+    // 使用 [[ ]] 作为模板分隔符，避免与 Django 模板 {{ }} 冲突
+    delimiters: ['[[', ']]'],
+});
+
+app.use(vuetify);
+app.mount('#app');
