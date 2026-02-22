@@ -5,55 +5,61 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>{% block title %}校园广播站管理系统{% endblock %}</title>
-    
-    <!-- Tailwind CSS CDN -->
-    <script src="https://cdn.tailwindcss.com"></script>
-    
+
+    <!-- Material Design Icons -->
+    <link href="{% static 'vendor/mdi/css/materialdesignicons.min.css' %}" rel="stylesheet">
+
+    <!-- Vuetify CSS -->
+    <link href="{% static 'vendor/vuetify/vuetify.min.css' %}" rel="stylesheet">
+
     <!-- Custom CSS -->
     <link rel="stylesheet" href="{% static 'css/style.css' %}">
-    
+
     {% block extra_head %}{% endblock %}
 </head>
-<body class="bg-gray-50">
-    <!-- Navigation Bar -->
-    <nav class="bg-white shadow-lg">
-        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-            <div class="flex justify-between h-16">
-                <div class="flex">
-                    <div class="flex-shrink-0 flex items-center">
-                        <a href="{% url 'home' %}" class="text-2xl font-bold text-indigo-600">
-                            校园广播站
-                        </a>
-                    </div>
-                    <div class="hidden sm:ml-6 sm:flex sm:space-x-8">
-                        <a href="{% url 'home' %}" class="border-indigo-500 text-gray-900 inline-flex items-center px-1 pt-1 border-b-2 text-sm font-medium">
-                            首页
-                        </a>
-                    </div>
-                </div>
-                <div class="hidden sm:ml-6 sm:flex sm:items-center">
-                    <a href="{% url 'admin:index' %}" class="text-gray-700 hover:text-indigo-600 px-3 py-2 rounded-md text-sm font-medium">
-                        管理后台
+<body>
+    <div id="app">
+        <v-app>
+            <!-- 顶部导航栏 -->
+            <v-app-bar color="primary" elevation="4">
+                <v-app-bar-title>
+                    <a href="{% url 'home' %}" style="text-decoration: none; color: white; font-weight: bold;">
+                        校园广播站
                     </a>
-                </div>
-            </div>
-        </div>
-    </nav>
+                </v-app-bar-title>
+                <template v-slot:append>
+                    <v-btn href="{% url 'home' %}" variant="text" color="white" prepend-icon="mdi-home">
+                        首页
+                    </v-btn>
+                    <v-btn href="{% url 'admin:index' %}" variant="text" color="white" prepend-icon="mdi-cog">
+                        管理后台
+                    </v-btn>
+                </template>
+            </v-app-bar>
 
-    <!-- Main Content -->
-    <main class="max-w-7xl mx-auto py-6 sm:px-6 lg:px-8">
-        {% block content %}
-        {% endblock %}
-    </main>
+            <!-- 主内容区 -->
+            <v-main>
+                <v-container class="py-6">
+                    {% block content %}
+                    {% endblock %}
+                </v-container>
+            </v-main>
 
-    <!-- Footer -->
-    <footer class="bg-white mt-12">
-        <div class="max-w-7xl mx-auto py-6 px-4 sm:px-6 lg:px-8">
-            <p class="text-center text-gray-500 text-sm">
-                &copy; 2026 校园广播站管理系统. All rights reserved.
-            </p>
-        </div>
-    </footer>
+            <!-- 页脚 -->
+            <v-footer color="primary" class="text-center">
+                <v-col cols="12">
+                    <span class="text-white text-body-2">
+                        &copy; 2026 校园广播站管理系统. All rights reserved.
+                    </span>
+                </v-col>
+            </v-footer>
+        </v-app>
+    </div>
+
+    <!-- Vue.js 3 -->
+    <script src="{% static 'vendor/vue/vue.global.prod.js' %}"></script>
+    <!-- Vuetify JS -->
+    <script src="{% static 'vendor/vuetify/vuetify.min.js' %}"></script>
 
     <!-- Custom JavaScript -->
     <script src="{% static 'js/main.js' %}"></script>

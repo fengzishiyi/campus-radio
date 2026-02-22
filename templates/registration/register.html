@@ -4,56 +4,71 @@
 {% block title %}注册 - 校园广播站管理系统{% endblock %}
 
 {% block content %}
-<div class="min-h-screen flex items-center justify-center py-12 px-4 sm:px-6 lg:px-8">
-    <div class="max-w-md w-full space-y-8">
-        <div>
-            <h2 class="mt-6 text-center text-3xl font-extrabold text-gray-900">
-                创建新账户
-            </h2>
-        </div>
-        <form class="mt-8 space-y-6" action="" method="POST">
-            {% csrf_token %}
-            <div class="rounded-md shadow-sm space-y-3">
-                <div>
-                    <label for="username" class="sr-only">用户名</label>
-                    <input id="username" name="username" type="text" required 
-                           class="appearance-none rounded relative block w-full px-3 py-2 border border-gray-300 placeholder-gray-500 text-gray-900 focus:outline-none focus:ring-indigo-500 focus:border-indigo-500 focus:z-10 sm:text-sm" 
-                           placeholder="用户名">
-                </div>
-                <div>
-                    <label for="email" class="sr-only">邮箱</label>
-                    <input id="email" name="email" type="email" required 
-                           class="appearance-none rounded relative block w-full px-3 py-2 border border-gray-300 placeholder-gray-500 text-gray-900 focus:outline-none focus:ring-indigo-500 focus:border-indigo-500 focus:z-10 sm:text-sm" 
-                           placeholder="邮箱地址">
-                </div>
-                <div>
-                    <label for="password1" class="sr-only">密码</label>
-                    <input id="password1" name="password1" type="password" required 
-                           class="appearance-none rounded relative block w-full px-3 py-2 border border-gray-300 placeholder-gray-500 text-gray-900 focus:outline-none focus:ring-indigo-500 focus:border-indigo-500 focus:z-10 sm:text-sm" 
-                           placeholder="密码">
-                </div>
-                <div>
-                    <label for="password2" class="sr-only">确认密码</label>
-                    <input id="password2" name="password2" type="password" required 
-                           class="appearance-none rounded relative block w-full px-3 py-2 border border-gray-300 placeholder-gray-500 text-gray-900 focus:outline-none focus:ring-indigo-500 focus:border-indigo-500 focus:z-10 sm:text-sm" 
-                           placeholder="确认密码">
-                </div>
-            </div>
+<v-row justify="center" class="mt-4">
+    <v-col cols="12" sm="8" md="6" lg="4">
+        <v-card elevation="4">
+            <v-card-item class="text-center pb-0">
+                <v-icon icon="mdi-account-plus" size="48" color="primary" class="mb-2"></v-icon>
+                <v-card-title class="text-h5 font-weight-bold">创建新账户</v-card-title>
+            </v-card-item>
+            <v-card-text class="pt-4">
+                <form action="" method="POST">
+                    {% csrf_token %}
+                    <v-text-field
+                        id="username"
+                        name="username"
+                        label="用户名"
+                        prepend-inner-icon="mdi-account"
+                        variant="outlined"
+                        required
+                        class="mb-2">
+                    </v-text-field>
+                    <v-text-field
+                        id="email"
+                        name="email"
+                        label="邮箱地址"
+                        type="email"
+                        prepend-inner-icon="mdi-email"
+                        variant="outlined"
+                        required
+                        class="mb-2">
+                    </v-text-field>
+                    <v-text-field
+                        id="password1"
+                        name="password1"
+                        label="密码"
+                        type="password"
+                        prepend-inner-icon="mdi-lock"
+                        variant="outlined"
+                        required
+                        class="mb-2">
+                    </v-text-field>
+                    <v-text-field
+                        id="password2"
+                        name="password2"
+                        label="确认密码"
+                        type="password"
+                        prepend-inner-icon="mdi-lock-check"
+                        variant="outlined"
+                        required
+                        class="mb-4">
+                    </v-text-field>
 
-            <div>
-                <button type="submit" 
-                        class="group relative w-full flex justify-center py-2 px-4 border border-transparent text-sm font-medium rounded-md text-white bg-indigo-600 hover:bg-indigo-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500">
-                    注册
-                </button>
-            </div>
-            
-            <div class="text-center">
-                <span class="text-gray-600">已有账户？</span>
-                <a href="{% url 'home' %}" class="font-medium text-indigo-600 hover:text-indigo-500">
-                    返回首页
-                </a>
-            </div>
-        </form>
-    </div>
-</div>
+                    <v-btn
+                        type="submit"
+                        color="primary"
+                        block
+                        size="large"
+                        class="mb-4">
+                        注册
+                    </v-btn>
+                </form>
+                <div class="text-center">
+                    <span class="text-medium-emphasis">已有账户？</span>
+                    <a href="{% url 'home' %}" class="text-primary text-decoration-none ml-1">返回首页</a>
+                </div>
+            </v-card-text>
+        </v-card>
+    </v-col>
+</v-row>
 {% endblock %}

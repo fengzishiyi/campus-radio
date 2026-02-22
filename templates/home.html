@@ -4,121 +4,99 @@
 {% block title %}首页 - 校园广播站管理系统{% endblock %}
 
 {% block content %}
-<div class="px-4 py-6 sm:px-0">
-    <!-- Welcome Section -->
-    <div class="bg-white overflow-hidden shadow rounded-lg mb-6">
-        <div class="px-4 py-5 sm:p-6">
-            <h1 class="text-3xl font-bold text-gray-900 mb-4">
-                欢迎来到校园广播站管理系统
-            </h1>
-            <p class="text-lg text-gray-600 mb-6">
-                这是一个基于 Django 5.0 构建的现代化校园广播站管理系统框架，使用 Tailwind CSS 提供优雅的用户界面。
-            </p>
-        </div>
-    </div>
+<!-- 欢迎区域 -->
+<v-card class="mb-6" elevation="2">
+    <v-card-item>
+        <v-card-title class="text-h4 font-weight-bold">
+            欢迎来到校园广播站管理系统
+        </v-card-title>
+    </v-card-item>
+    <v-card-text class="text-body-1 text-medium-emphasis">
+        这是一个基于 Django 5.0 构建的现代化校园广播站管理系统框架，使用 Vuetify 提供优雅的用户界面。
+    </v-card-text>
+</v-card>
 
-    <!-- Feature Cards -->
-    <div class="grid grid-cols-1 gap-6 sm:grid-cols-2 lg:grid-cols-3">
-        <!-- Card 1 -->
-        <div class="bg-white overflow-hidden shadow rounded-lg">
-            <div class="px-4 py-5 sm:p-6">
-                <div class="flex items-center">
-                    <div class="flex-shrink-0 bg-indigo-500 rounded-md p-3">
-                        <svg class="h-6 w-6 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13 10V3L4 14h7v7l9-11h-7z"></path>
-                        </svg>
-                    </div>
-                    <div class="ml-5 w-0 flex-1">
-                        <dl>
-                            <dt class="text-sm font-medium text-gray-500 truncate">
-                                快速开发
-                            </dt>
-                            <dd class="text-lg font-medium text-gray-900">
-                                开箱即用
-                            </dd>
-                        </dl>
-                    </div>
-                </div>
-                <div class="mt-4">
-                    <p class="text-sm text-gray-500">
-                        预配置的 Django 项目结构，可以立即开始开发您的应用。
-                    </p>
-                </div>
-            </div>
-        </div>
+<!-- 功能卡片 -->
+<v-row>
+    <!-- 卡片 1 -->
+    <v-col cols="12" sm="6" lg="4">
+        <v-card elevation="2" height="100%">
+            <v-card-item>
+                <template v-slot:prepend>
+                    <v-avatar color="indigo" size="48">
+                        <v-icon color="white" icon="mdi-lightning-bolt"></v-icon>
+                    </v-avatar>
+                </template>
+                <v-card-title>快速开发</v-card-title>
+                <v-card-subtitle>开箱即用</v-card-subtitle>
+            </v-card-item>
+            <v-card-text class="text-medium-emphasis">
+                预配置的 Django 项目结构，可以立即开始开发您的应用。
+            </v-card-text>
+        </v-card>
+    </v-col>
 
-        <!-- Card 2 -->
-        <div class="bg-white overflow-hidden shadow rounded-lg">
-            <div class="px-4 py-5 sm:p-6">
-                <div class="flex items-center">
-                    <div class="flex-shrink-0 bg-green-500 rounded-md p-3">
-                        <svg class="h-6 w-6 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M7 21a4 4 0 01-4-4V5a2 2 0 012-2h4a2 2 0 012 2v12a4 4 0 01-4 4zm0 0h12a2 2 0 002-2v-4a2 2 0 00-2-2h-2.343M11 7.343l1.657-1.657a2 2 0 012.828 0l2.829 2.829a2 2 0 010 2.828l-8.486 8.485M7 17h.01"></path>
-                        </svg>
-                    </div>
-                    <div class="ml-5 w-0 flex-1">
-                        <dl>
-                            <dt class="text-sm font-medium text-gray-500 truncate">
-                                现代设计
-                            </dt>
-                            <dd class="text-lg font-medium text-gray-900">
-                                Tailwind CSS
-                            </dd>
-                        </dl>
-                    </div>
-                </div>
-                <div class="mt-4">
-                    <p class="text-sm text-gray-500">
-                        使用 Tailwind CSS 构建响应式、现代化的用户界面。
-                    </p>
-                </div>
-            </div>
-        </div>
+    <!-- 卡片 2 -->
+    <v-col cols="12" sm="6" lg="4">
+        <v-card elevation="2" height="100%">
+            <v-card-item>
+                <template v-slot:prepend>
+                    <v-avatar color="green" size="48">
+                        <v-icon color="white" icon="mdi-palette"></v-icon>
+                    </v-avatar>
+                </template>
+                <v-card-title>现代设计</v-card-title>
+                <v-card-subtitle>Vuetify 组件库</v-card-subtitle>
+            </v-card-item>
+            <v-card-text class="text-medium-emphasis">
+                使用 Vuetify 3 构建响应式、现代化的用户界面。
+            </v-card-text>
+        </v-card>
+    </v-col>
 
-        <!-- Card 3 -->
-        <div class="bg-white overflow-hidden shadow rounded-lg">
-            <div class="px-4 py-5 sm:p-6">
-                <div class="flex items-center">
-                    <div class="flex-shrink-0 bg-yellow-500 rounded-md p-3">
-                        <svg class="h-6 w-6 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12h6m-6 4h6m2 5H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z"></path>
-                        </svg>
-                    </div>
-                    <div class="ml-5 w-0 flex-1">
-                        <dl>
-                            <dt class="text-sm font-medium text-gray-500 truncate">
-                                完善文档
-                            </dt>
-                            <dd class="text-lg font-medium text-gray-900">
-                                详细指南
-                            </dd>
-                        </dl>
-                    </div>
-                </div>
-                <div class="mt-4">
-                    <p class="text-sm text-gray-500">
-                        提供详细的 README 文档，帮助您快速上手项目开发。
-                    </p>
-                </div>
-            </div>
-        </div>
-    </div>
+    <!-- 卡片 3 -->
+    <v-col cols="12" sm="6" lg="4">
+        <v-card elevation="2" height="100%">
+            <v-card-item>
+                <template v-slot:prepend>
+                    <v-avatar color="amber-darken-2" size="48">
+                        <v-icon color="white" icon="mdi-file-document-outline"></v-icon>
+                    </v-avatar>
+                </template>
+                <v-card-title>完善文档</v-card-title>
+                <v-card-subtitle>详细指南</v-card-subtitle>
+            </v-card-item>
+            <v-card-text class="text-medium-emphasis">
+                提供详细的 README 文档，帮助您快速上手项目开发。
+            </v-card-text>
+        </v-card>
+    </v-col>
+</v-row>
 
-    <!-- Getting Started Section -->
-    <div class="bg-white overflow-hidden shadow rounded-lg mt-6">
-        <div class="px-4 py-5 sm:p-6">
-            <h2 class="text-2xl font-bold text-gray-900 mb-4">
-                开始使用
-            </h2>
-            <div class="prose max-w-none">
-                <ol class="list-decimal list-inside space-y-2 text-gray-600">
-                    <li>查看 <code class="bg-gray-100 px-2 py-1 rounded text-sm">README.md</code> 了解项目结构和开发指南</li>
-                    <li>在 <code class="bg-gray-100 px-2 py-1 rounded text-sm">apps/</code> 目录下创建您的应用</li>
-                    <li>配置数据模型、视图和模板</li>
-                    <li>使用 <code class="bg-gray-100 px-2 py-1 rounded text-sm">python manage.py runserver</code> 运行开发服务器</li>
-                </ol>
-            </div>
-        </div>
-    </div>
-</div>
+<!-- 开始使用 -->
+<v-card class="mt-6" elevation="2">
+    <v-card-item>
+        <v-card-title class="text-h5 font-weight-bold">开始使用</v-card-title>
+    </v-card-item>
+    <v-card-text>
+        <v-list lines="one">
+            <v-list-item
+                prepend-icon="mdi-numeric-1-circle-outline"
+                title="查看 README.md 了解项目结构和开发指南">
+            </v-list-item>
+            <v-list-item
+                prepend-icon="mdi-numeric-2-circle-outline"
+                title="在 apps/ 目录下创建您的应用">
+            </v-list-item>
+            <v-list-item
+                prepend-icon="mdi-numeric-3-circle-outline"
+                title="配置数据模型、视图和模板">
+            </v-list-item>
+            <v-list-item
+                prepend-icon="mdi-numeric-4-circle-outline"
+                title="使用 python manage.py runserver 运行开发服务器">
+            </v-list-item>
+        </v-list>
+    </v-card-text>
+</v-card>
 {% endblock %}

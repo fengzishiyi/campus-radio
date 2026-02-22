@@ -4,60 +4,61 @@
 {% block title %}登录 - 校园广播站管理系统{% endblock %}
 
 {% block content %}
-<div class="min-h-screen flex items-center justify-center py-12 px-4 sm:px-6 lg:px-8">
-    <div class="max-w-md w-full space-y-8">
-        <div>
-            <h2 class="mt-6 text-center text-3xl font-extrabold text-gray-900">
-                登录到您的账户
-            </h2>
-        </div>
-        <form class="mt-8 space-y-6" action="" method="POST">
-            {% csrf_token %}
-            <input type="hidden" name="remember" value="true">
-            <div class="rounded-md shadow-sm -space-y-px">
-                <div>
-                    <label for="username" class="sr-only">用户名</label>
-                    <input id="username" name="username" type="text" required 
-                           class="appearance-none rounded-none relative block w-full px-3 py-2 border border-gray-300 placeholder-gray-500 text-gray-900 rounded-t-md focus:outline-none focus:ring-indigo-500 focus:border-indigo-500 focus:z-10 sm:text-sm" 
-                           placeholder="用户名">
-                </div>
-                <div>
-                    <label for="password" class="sr-only">密码</label>
-                    <input id="password" name="password" type="password" required 
-                           class="appearance-none rounded-none relative block w-full px-3 py-2 border border-gray-300 placeholder-gray-500 text-gray-900 rounded-b-md focus:outline-none focus:ring-indigo-500 focus:border-indigo-500 focus:z-10 sm:text-sm" 
-                           placeholder="密码">
-                </div>
-            </div>
+<v-row justify="center" class="mt-4">
+    <v-col cols="12" sm="8" md="6" lg="4">
+        <v-card elevation="4">
+            <v-card-item class="text-center pb-0">
+                <v-icon icon="mdi-radio-tower" size="48" color="primary" class="mb-2"></v-icon>
+                <v-card-title class="text-h5 font-weight-bold">登录到您的账户</v-card-title>
+            </v-card-item>
+            <v-card-text class="pt-4">
+                <form action="" method="POST">
+                    {% csrf_token %}
+                    <v-text-field
+                        id="username"
+                        name="username"
+                        label="用户名"
+                        prepend-inner-icon="mdi-account"
+                        variant="outlined"
+                        required
+                        class="mb-2">
+                    </v-text-field>
+                    <v-text-field
+                        id="password"
+                        name="password"
+                        label="密码"
+                        type="password"
+                        prepend-inner-icon="mdi-lock"
+                        variant="outlined"
+                        required
+                        class="mb-2">
+                    </v-text-field>
 
-            <div class="flex items-center justify-between">
-                <div class="flex items-center">
-                    <input id="remember-me" name="remember-me" type="checkbox" 
-                           class="h-4 w-4 text-indigo-600 focus:ring-indigo-500 border-gray-300 rounded">
-                    <label for="remember-me" class="ml-2 block text-sm text-gray-900">
-                        记住我
-                    </label>
-                </div>
+                    <div class="d-flex align-center justify-space-between mb-4">
+                        <v-checkbox
+                            id="remember-me"
+                            name="remember-me"
+                            label="记住我"
+                            density="compact"
+                            hide-details>
+                        </v-checkbox>
+                        <a href="#" class="text-primary text-decoration-none text-body-2">忘记密码？</a>
+                    </div>
 
-                <div class="text-sm">
-                    <a href="#" class="font-medium text-indigo-600 hover:text-indigo-500">
-                        忘记密码？
-                    </a>
+                    <v-btn
+                        type="submit"
+                        color="primary"
+                        block
+                        size="large"
+                        class="mb-4">
+                        登录
+                    </v-btn>
+                </form>
+                <div class="text-center">
+                    <a href="{% url 'home' %}" class="text-primary text-decoration-none">返回首页</a>
                 </div>
-            </div>
-
-            <div>
-                <button type="submit" 
-                        class="group relative w-full flex justify-center py-2 px-4 border border-transparent text-sm font-medium rounded-md text-white bg-indigo-600 hover:bg-indigo-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500">
-                    登录
-                </button>
-            </div>
-            
-            <div class="text-center">
-                <a href="{% url 'home' %}" class="font-medium text-indigo-600 hover:text-indigo-500">
-                    返回首页
-                </a>
-            </div>
-        </form>
-    </div>
-</div>
+            </v-card-text>
+        </v-card>
+    </v-col>
+</v-row>
 {% endblock %}
